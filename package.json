@@ -1,0 +1,8 @@
+{
+  "name": "bw-tech-node",
+  "version": "1.0.0",
+  "description": "bw tech node.js backend",
+  "main": "index.js",
+  "author": "Bowen",
+  "license": "MIT"
+}
