@@ -4,5 +4,21 @@
   "description": "bw tech node.js backend",
   "main": "index.js",
   "author": "Bowen",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@nestjs/common": "^4.6.5",
+    "@nestjs/core": "^4.6.5",
+    "@nestjs/microservices": "^4.6.5",
+    "@nestjs/websockets": "^4.6.5",
+    "body-parser": "^1.18.2",
+    "mysql": "^2.15.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^5.5.6",
+    "typeorm": "^0.1.16",
+    "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.7",
+    "ts-node": "^5.0.1"
+  }
 }
