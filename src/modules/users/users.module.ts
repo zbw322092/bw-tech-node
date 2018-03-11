@@ -1,19 +1,12 @@
-import { NestModule, MiddlewaresConsumer } from "@nestjs/common/interfaces";
-import { UserFindMiddleware } from "./user.find.middleware";
-import { RequestMethod, Module } from "@nestjs/common";
-import { DatabaseModule } from "../database/database.module";
-import { UsersController } from "./users.controller";
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Users } from "./users.entity";
 import { UsersService } from "./users.service";
+import { UsersController } from "./users.controller";
 
 @Module({
-  modules: [DatabaseModule],
-  controllers: [UsersController],
-  components: [UsersService]
+  imports: [TypeOrmModule.forFeature([Users])],
+  components: [UsersService],
+  controllers: [UsersController]
 })
-export class UsersModule implements NestModule {
-  public configure(consumer: MiddlewaresConsumer) {
-    consumer.apply(UserFindMiddleware).forRoutes({
-      path: 'users/:id', method: RequestMethod.ALL
-    });
-  }
-}
+export class UsersModule {}

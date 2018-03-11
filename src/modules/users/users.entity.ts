@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class Users {
 
   constructor(id: string, name: string, slug: string, password: string, email: string,
     profile_image: string|null, cover_image: string|null, bio: string|null, website: string|null,
