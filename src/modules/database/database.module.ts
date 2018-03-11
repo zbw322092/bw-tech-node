@@ -5,5 +5,4 @@ import { TypeOrmDatabaseService } from './typeOrm.database.service';
   components: [TypeOrmDatabaseService],
   exports: [TypeOrmDatabaseService]
 })
-
 export class DatabaseModule {}

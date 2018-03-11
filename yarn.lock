@@ -31,6 +31,10 @@
     optional "0.1.4"
     redis "^2.7.1"
 
+"@nestjs/typeorm@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-2.0.0.tgz#71dee522091cd176474a6d86e0fe40dc3d1c1643"
+
 "@nestjs/websockets@^4.6.5":
   version "4.6.5"
   resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-4.6.5.tgz#a62f79b97dfcf6858d9ba8c5b8b9683e3df0d049"
