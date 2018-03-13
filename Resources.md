@@ -19,3 +19,7 @@ https://kamilmysliwiec.com/nest-release-canditate-is-here-introduction-modern-no
 
 [7] Nest.js Brings TypeScript to Node.js and Express
 https://auth0.com/blog/nestjs-brings-typescript-to-nodejs-and-express/ <br/>
+
+[8] Easy Node Authentication: Setup and Local
+https://scotch.io/tutorials/easy-node-authentication-setup-and-local#application-structure <br/>
+
