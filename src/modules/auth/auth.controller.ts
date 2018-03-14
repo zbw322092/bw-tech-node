@@ -1,12 +1,23 @@
-import { Controller, Post, Body } from "@nestjs/common";
+import { Controller, Post, Body, Get } from "@nestjs/common";
 import { Users } from "../users/users.entity";
 import { SignupDto } from "./dto/auth.signup.dto";
+import { AuthService } from "./auth.service";
 
 @Controller('auth') 
 export class AuthController {
+
+  constructor(private readonly authService: AuthService) {}
+
   @Post('/signup')
-  signUp(@Body() signupDto: SignupDto): any {
+  signup(@Body() signupDto: SignupDto): any {
     console.log(`Param: ${JSON.stringify(signupDto)}`);
     return signupDto;
+  }
+
+  @Post('/email_avaliable')
+  isEmailAvaliable(@Body('email') email: string) {
+    return this.authService.checkEmailAvaliable(email).then((count: number) => {
+      return { avaliable: count ? false : true };
+    });
   }
 }
