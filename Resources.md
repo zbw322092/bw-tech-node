@@ -23,3 +23,9 @@ https://auth0.com/blog/nestjs-brings-typescript-to-nodejs-and-express/ <br/>
 [8] Easy Node Authentication: Setup and Local
 https://scotch.io/tutorials/easy-node-authentication-setup-and-local#application-structure <br/>
 
+[9][unfinished] Sharding & IDs at Instagram
+https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c <br/>
+
+[10] What does it take to generate cluster wide unique ID’s in a distributed system
+https://medium.com/@varuntayal/what-does-it-take-to-generate-cluster-wide-unique-ids-in-a-distributed-system-d505b9eaa46e <br/>
+
