@@ -11,7 +11,7 @@ export class AuthController {
   @Post('/signup')
   signup(@Body() signupDto: SignupDto): any {
     console.log(`Param: ${JSON.stringify(signupDto)}`);
-    return signupDto;
+    return this.authService.signup(signupDto);
   }
 
   @Post('/email_avaliable')
