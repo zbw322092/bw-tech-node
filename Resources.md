@@ -29,3 +29,29 @@ https://engineering.instagram.com/sharding-ids-at-instagram-1cf5a71e5a5c <br/>
 [10] What does it take to generate cluster wide unique ID’s in a distributed system
 https://medium.com/@varuntayal/what-does-it-take-to-generate-cluster-wide-unique-ids-in-a-distributed-system-d505b9eaa46e <br/>
 
+[11] Implement Access Control in Node.js
+https://blog.nodeswat.com/implement-access-control-in-node-js-8567e7b484d1 <br/>
+
+[12] Creating Role Based Authentication with Passport in Ionic 2 – Part 1
+https://www.joshmorony.com/creating-role-based-authentication-with-passport-in-ionic-2-part-1/ <br/>
+
+[13] JSON Web Tokens (JWT) vs Sessions
+https://float-middle.com/json-web-tokens-jwt-vs-sessions/ <br/>
+
+[14] JSON Web Tokens vs. Session Cookies: In Practice
+https://ponyfoo.com/articles/json-web-tokens-vs-session-cookies <br/>
+
+[15][todo] Get Started with JSON Web Tokens
+https://auth0.com/learn/json-web-tokens/ <br/>
+
+[16][todo] Blacklisting JSON Web Token API Keys
+https://auth0.com/blog/blacklist-json-web-token-api-keys/ <br/>
+
+[17] Refactoring a Basic, Authenticated API with Node, Express, and Mongo
+http://blog.slatepeak.com/refactoring-a-basic-authenticated-api-with-node-express-and-mongo/ <br/>
+
+[18] why-jwts-suck-as-session-tokens
+https://scotch.io/bar-talk/why-jwts-suck-as-session-tokens <br/>
+
+[19][todo] Set Up a Secure Node.js Web Application
+https://blog.nodeswat.com/set-up-a-secure-node-js-web-application-9256b8790f11 <br/>
