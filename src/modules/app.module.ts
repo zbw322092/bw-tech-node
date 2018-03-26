@@ -12,7 +12,7 @@ import { AuthController } from "./auth/auth.controller";
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void {
     consumer.apply(IncomingRequestMiddleware).forRoutes(
-      { path: '/', method: RequestMethod.POST }
+      { path: '/route', method: RequestMethod.POST }
     );
   }
 }
