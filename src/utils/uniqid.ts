@@ -14,9 +14,9 @@ const address = mac ? parseInt(mac.replace(/\:|\D+/gi, '')).toString(36) : '';
 
 //  Exports
 // ================================================
-export function uniqid(prefix) { return (prefix || '') + address + pid + now().toString(36); }
-export function uniqidProcess(prefix) { return (prefix || '') + pid + now().toString(36); }
-export function uniqidTime(prefix) { return (prefix || '') + now().toString(36); }
+export function uniqid(prefix?: string): string { return (prefix || '') + address + pid + now().toString(36); }
+export function uniqidProcess(prefix?: string): string { return (prefix || '') + pid + now().toString(36); }
+export function uniqidTime(prefix?: string): string { return (prefix || '') + now().toString(36); }
 
 //  Helpers
 // ================================================

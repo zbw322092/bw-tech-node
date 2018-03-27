@@ -2,11 +2,12 @@ import { Component } from "@nestjs/common";
 import { SignupDto } from "./dto/auth.signup.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "../users/users.entity";
-import { Repository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { createBySuccess, createByFail } from "../common/serverResponse/ServerResponse";
 import { isValidEmail, passwordValidator } from "../../utils/validator";
 import { errorValidation } from "../common/serverResponse/Const.Error";
+import { InvitesService } from "../invites/invites.service";
 
 enum AuthResCode {
   'invalidEmail' = '1001',
@@ -28,7 +29,8 @@ enum AuthResMsg {
 export class AuthService {
   constructor(
     @InjectRepository(Users)
-    private userRepository: Repository<Users>
+    private userRepository: Repository<Users>,
+    private readonly invitesService: InvitesService
   ) { }
 
   public async signup(signupDto: SignupDto): Promise<ICommonResponse<any>> {
@@ -56,6 +58,20 @@ export class AuthService {
       return createByFail({ code: errorValidation(AuthResCode.unavaliableEmaill), message: AuthResMsg.unavaliableEmaill });
     }
 
+    const { invitedUsers, invitedUsersCount } = await this.invitesService.findInvitedUser(email);
+    if (invitedUsersCount) {
+      const roleId = invitedUsers[invitedUsersCount - 1].role_id;
+
+    } else {
+
+    }
+
+    /**
+     * users table:
+     *  id, name, slug, password, email, status, created_at, create_by
+     * roles_users:
+     *  id, role_id, user_id
+     */
     return createBySuccess({ message: 'Register Success', data: {} });
   }
 

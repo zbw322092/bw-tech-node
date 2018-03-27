@@ -5,7 +5,9 @@
   "username": "root",
   "password": "root",
   "database": "bw_tech_node",
-  "entities": ["src/modules/**/**.entity{.ts,.js}"],
+  "entities": [
+    "src/modules/**/**.entity{.ts,.js}"
+  ],
   "synchronize": true,
   "logging": false,
   "migrations": ["src/data/migration/*{.ts,.js}"],

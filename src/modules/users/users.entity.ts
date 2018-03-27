@@ -82,16 +82,16 @@ export class Users {
   meta_description: string | null;
 
   @Column({ type: 'datetime', default: null })
-  last_seen: number|null;
+  last_seen: string|null;
 
   @Column({ type: 'datetime' })
-  created_at: number;
+  created_at: string;
 
   @Column({ type: 'varchar', length: 24 })
   created_by: string;
 
   @Column({ type: 'datetime', default: null })
-  updated_at: number|null;
+  updated_at: string|null;
 
   @Column({ type: 'varchar', length: 24, default: null })
   updated_by: string|null;
