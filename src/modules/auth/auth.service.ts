@@ -3,10 +3,10 @@ import { SignupDto } from "./dto/auth.signup.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "../users/users.entity";
 import { Repository } from "typeorm";
-import { CommonResponse } from "../common/Interfaces/response";
-import { ServerResponse } from "../common/ServerResponse";
-import { isValidEmail, passwordValidator } from "./utils/validator";
-import { errorDataValidation } from "../common/Const.Error";
+import { ICommonResponse } from "../common/interfaces/ICommonResponse";
+import { createBySuccess, createByFail } from "../common/serverResponse/ServerResponse";
+import { isValidEmail, passwordValidator } from "../../utils/validator";
+import { errorValidation } from "../common/serverResponse/Const.Error";
 
 enum AuthResCode {
   'invalidEmail' = '1001',
@@ -29,34 +29,34 @@ export class AuthService {
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>
-  ) {}
+  ) { }
 
-  public async signup(signupDto: SignupDto): Promise<CommonResponse> {
+  public async signup(signupDto: SignupDto): Promise<ICommonResponse<any>> {
     const { email, name, password } = signupDto;
     // check email validation
     if (!isValidEmail(email)) {
-      return ServerResponse.createByErrorCodeMsgData(errorDataValidation(AuthResCode.invalidEmail), AuthResMsg.invalidEmail, {});
+      return createByFail({ code: errorValidation(AuthResCode.invalidEmail), message: AuthResMsg.invalidEmail });
     }
 
     // check password validation
     const pwdValidation = passwordValidator(password, email);
     if (!pwdValidation.isValid) {
       if (pwdValidation.error === 0) {
-        return ServerResponse.createByErrorCodeMsgData(errorDataValidation(AuthResCode.weakPwd), AuthResMsg.weakPwd, {});
+        return createByFail({ code: errorValidation(AuthResCode.weakPwd), message: AuthResMsg.weakPwd });
       } else if (pwdValidation.error === 1) {
-        return ServerResponse.createByErrorCodeMsgData(errorDataValidation(AuthResCode.commonPwd), AuthResMsg.commonPwd, {});
+        return createByFail({ code: errorValidation(AuthResCode.commonPwd), message: AuthResMsg.commonPwd });
       } else if (pwdValidation.error === 2) {
-        return ServerResponse.createByErrorCodeMsgData(errorDataValidation(AuthResCode.pwdSameAsEmail), AuthResMsg.pwdSameAsEmail, {});
+        return createByFail({ code: errorValidation(AuthResCode.pwdSameAsEmail), message: AuthResMsg.pwdSameAsEmail });
       }
     }
 
     // check email avaliable
     const emailAvaliable = await this.checkEmailAvaliable(email);
     if (emailAvaliable) {
-      return ServerResponse.createByErrorCodeMsgData(errorDataValidation(AuthResCode.unavaliableEmaill), AuthResMsg.unavaliableEmaill, {});
+      return createByFail({ code: errorValidation(AuthResCode.unavaliableEmaill), message: AuthResMsg.unavaliableEmaill });
     }
 
-    return ServerResponse.createBySuccessMsgData('Register Success', {});
+    return createBySuccess({ message: 'Register Success', data: {} });
   }
 
   public async checkEmailAvaliable(email: string): Promise<number> {
