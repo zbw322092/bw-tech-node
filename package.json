@@ -18,6 +18,7 @@
     "chalk": "^2.3.2",
     "macaddress": "^0.2.8",
     "moment": "^2.21.0",
+    "moment-timezone": "^0.5.14",
     "mysql": "^2.15.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
