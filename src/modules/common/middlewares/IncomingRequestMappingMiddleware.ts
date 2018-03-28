@@ -5,7 +5,7 @@ import { Response, Request, NextFunction } from "express";
 import { RequestErrorException, ResourceNotFoundException } from "../exceptions/exceptions";
 
 @Middleware()
-export class IncomingRequestMiddleware implements NestMiddleware {
+export class IncomingRequestMappingMiddleware implements NestMiddleware {
   public resolve(...args: any[]): ExpressMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
 

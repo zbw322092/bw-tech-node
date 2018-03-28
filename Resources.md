@@ -55,3 +55,15 @@ https://scotch.io/bar-talk/why-jwts-suck-as-session-tokens <br/>
 
 [19][todo] Set Up a Secure Node.js Web Application
 https://blog.nodeswat.com/set-up-a-secure-node-js-web-application-9256b8790f11 <br/>
+
+[20] How do I set the time zone of MySQL?
+https://stackoverflow.com/a/19069310/6498272 <br/>
+
+[21] MySQL: Insert datetime into other datetime field
+https://stackoverflow.com/a/8551986/6498272 <br/>
+
+[22][unfinished] TypeScript: Safety in the Absence of Types
+https://vsavkin.com/typescript-how-to-be-safe-even-if-you-cannot-type-it-31eb08485fe6
+
+[23] Building an API Backend with TypeScript and Express - Part Two: Validation
+https://www.worl.co/2016/12/building-an-api-backend-with-typescript-and-express---part-two-validation/ <br/>
