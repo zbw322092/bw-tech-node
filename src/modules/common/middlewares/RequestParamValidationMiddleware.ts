@@ -11,22 +11,6 @@ import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
 
 type Constructor<T> = { new(): T };
 
-// export function requestParamValidation<T>(type: Constructor<T>): RequestHandler {
-//   const validator = new Validator();
-
-//   return (req: Request, res: Response, next: NextFunction) => {
-//     const param = req.body.param || {};
-//     const requestParam = deserialize(type, param);
-//     const errors = validator.validateSync(requestParam);
-//     if (errors.length > 0) {
-//       throw new RequestErrorException();
-//     } else {
-//       req.body.param = requestParam;
-//       next();
-//     }
-//   }
-// }
-
 @Middleware()
 export class RequestParamValidationMiddleware implements NestMiddleware {
   resolve(dto: any): ExpressMiddleware {

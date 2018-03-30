@@ -67,3 +67,6 @@ https://vsavkin.com/typescript-how-to-be-safe-even-if-you-cannot-type-it-31eb084
 
 [23] Building an API Backend with TypeScript and Express - Part Two: Validation
 https://www.worl.co/2016/12/building-an-api-backend-with-typescript-and-express---part-two-validation/ <br/>
+
+[24] All You Ever Wanted to Know About Sessions In Node.js
+https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions <br/>

@@ -1,10 +1,9 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
-import { getNowDatetime } from "../../utils/timeHandler";
 
 @Entity()
 export class Roles {
   
-  @PrimaryColumn({ type: 'varchar', length: 24 })
+  @PrimaryColumn({ type: 'varchar', length: 30 })
   id: string;
 
   @Column({ type: 'varchar', length: 50 })
@@ -16,12 +15,12 @@ export class Roles {
   @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
   created_at?: string;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 30 })
   created_by: string;
 
   @Column({ type: 'datetime', default: null })
   updated_at?: string | null;
 
-  @Column({ type: 'varchar', length: 24, default: null })
+  @Column({ type: 'varchar', length: 30, default: null })
   updated_by?: string | null;
 }

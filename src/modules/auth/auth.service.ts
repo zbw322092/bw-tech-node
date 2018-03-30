@@ -58,12 +58,14 @@ export class AuthService {
       return createByFail({ code: errorValidation(AuthResCode.unavaliableEmaill), message: AuthResMsg.unavaliableEmaill });
     }
 
+    // check if this user has been invited, if invited, register this user using invited role, 
+    // otherwise, register this user as visitor role as default.
     const { invitedUsers, invitedUsersCount } = await this.invitesService.findInvitedUser(email);
     if (invitedUsersCount) {
       const roleId = invitedUsers[invitedUsersCount - 1].role_id;
-
+      // TODO
     } else {
-
+      
     }
 
     /**

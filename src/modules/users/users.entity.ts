@@ -4,42 +4,14 @@ import { IsEmail } from 'class-validator';
 @Entity()
 export class Users {
 
-  constructor(id: string, name: string, slug: string, password: string, email: string,
-    profile_image: string|null, cover_image: string|null, bio: string|null, website: string|null,
-    location: string|null, facebook: string|null, twitter: string|null, status: string, visibility: string,
-    meta_title: string|null, meta_description: string|null, last_seen: number|null, created_at: number,
-    created_by: string, updated_at: number|null, updated_by: string|null) {
-      this.id = id;
-      this.name = name;
-      this.slug = slug;
-      this.password = password;
-      this.email = email;
-      this.profile_image = profile_image;
-      this.cover_image = cover_image;
-      this.bio = bio;
-      this.website = website;
-      this.location = location;
-      this.facebook = facebook;
-      this.twitter = twitter;
-      this.status = status;
-      this.visibility = visibility;
-      this.meta_title = meta_title;
-      this.meta_description = meta_description;
-      this.last_seen = last_seen;
-      this.created_at = created_at;
-      this.created_by = created_by;
-      this.created_at = created_at;
-      this.updated_by = updated_by;
-  }
-
-  @PrimaryColumn({ type: 'varchar', length: 24 })
+  @PrimaryColumn({ type: 'varchar', length: 30 })
   id: string;
 
-  @Column({ type: 'varchar', length: 191 })
-  name: string;
+  @Column({ type: 'varchar', length: 191, default: null })
+  name: string | null;
 
-  @Column({ type: 'varchar', length: 191 })
-  slug: string;
+  @Column({ type: 'varchar', length: 191, default: null })
+  slug: string | null;
 
   @Column({ type: 'varchar', length: 60 })
   password: string;
@@ -72,9 +44,6 @@ export class Users {
   @Column({ type: 'varchar', length: 50, default: 'active'})
   status: string;
 
-  @Column({ type: 'varchar', length: 50, default: 'public'})
-  visibility: string;
-
   @Column({ type: 'varchar', length: 2000, default: null })
   meta_title: string | null;
 
@@ -87,12 +56,12 @@ export class Users {
   @Column({ type: 'datetime' })
   created_at: string;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 30 })
   created_by: string;
 
   @Column({ type: 'datetime', default: null })
   updated_at: string|null;
 
-  @Column({ type: 'varchar', length: 24, default: null })
+  @Column({ type: 'varchar', length: 30, default: null })
   updated_by: string|null;
 }

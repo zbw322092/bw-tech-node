@@ -3,10 +3,10 @@ import { Entity, PrimaryColumn, Column } from "typeorm";
 @Entity()
 export class Posts {
 
-  @PrimaryColumn({ type: 'varchar', length: 24 })
+  @PrimaryColumn({ type: 'varchar', length: 30 })
   id: string;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 30 })
   uuid: string;
 
   @Column({ type: 'varchar', length: 2000 })
@@ -45,25 +45,25 @@ export class Posts {
   @Column({ type: 'varchar', length: 2000, default: null })
   meta_description: string | null;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 30 })
   author_id: string;
 
   @Column({ type: 'datetime' })
   created_at: string;
 
-  @Column({ type: 'varchar', length: 24 })
+  @Column({ type: 'varchar', length: 30 })
   created_by: string;
 
   @Column({ type: 'datetime', default: null })
   updated_at: string | null;
 
-  @Column({ type: 'varchar', length: 24, default: null })
+  @Column({ type: 'varchar', length: 30, default: null })
   updated_by: string | null;
 
   @Column({ type: 'datetime', default: null })
   published_at: string | null;
 
-  @Column({ type: 'varchar', length: 24, default: null })
+  @Column({ type: 'varchar', length: 30, default: null })
   published_by: string | null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
