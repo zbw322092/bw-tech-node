@@ -7,9 +7,12 @@ import { IncomingRequestMappingMiddleware } from "./common/middlewares/IncomingR
 import { AuthController } from "./auth/auth.controller";
 import { InviteModule } from "./invites/invites.module";
 import { RolesModule } from "./roles/roles.module";
+import { CaptchaModule } from "./captcha/captcha.module";
+import { RolesUsersModule } from "./rolesusers/rolesusers.module";
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, PostsModule, AuthModule, InviteModule, RolesModule]
+  imports: [TypeOrmModule.forRoot(), UsersModule, PostsModule, AuthModule, InviteModule,
+    RolesUsersModule, RolesModule, CaptchaModule]
 })
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void {

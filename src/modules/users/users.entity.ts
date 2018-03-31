@@ -10,9 +10,6 @@ export class Users {
   @Column({ type: 'varchar', length: 191, default: null })
   name: string | null;
 
-  @Column({ type: 'varchar', length: 191, default: null })
-  slug: string | null;
-
   @Column({ type: 'varchar', length: 60 })
   password: string;
 
@@ -53,7 +50,7 @@ export class Users {
   @Column({ type: 'datetime', default: null })
   last_seen: string|null;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
   created_at: string;
 
   @Column({ type: 'varchar', length: 30 })

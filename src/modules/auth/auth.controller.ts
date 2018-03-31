@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get } from "@nestjs/common";
+import { Controller, Post, Body, Get, Session } from "@nestjs/common";
 import { Users } from "../users/users.entity";
-import { SignupDto } from "./dto/auth.signup.dto";
+import { SignupDto, EmailAvaliableDto, NameAvaliableDto } from "./dto/auth.dto";
 import { AuthService } from "./auth.service";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 
@@ -10,14 +10,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
-  signup(@Body('param') signupDto: SignupDto): Promise<ICommonResponse<any>> {
-    return this.authService.signup(signupDto);
+  public signup(@Session() session, @Body('param') signupDto: SignupDto): Promise<ICommonResponse<any>> {
+    return this.authService.signup(session, signupDto);
   }
 
   @Post('/email_avaliable')
-  isEmailAvaliable(@Body('email') email: string) {
-    return this.authService.checkEmailAvaliable(email).then((count: number) => {
-      return { avaliable: count ? false : true };
-    });
+  public isEmailAvaliable(@Body('param') emailAvaliableDto: EmailAvaliableDto) {
+    return this.authService.emailAvaliable(emailAvaliableDto.email);
+  }
+
+  @Post('/name_avaliable')
+  public isNameAvaliable(@Body('param') nameAvaliableDto: NameAvaliableDto) {
+    return this.authService.nameAvaliable(nameAvaliableDto.name);
   }
 }
