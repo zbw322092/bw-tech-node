@@ -21,7 +21,7 @@ export class Invites {
   @Column({ type: 'bigint' })
   expires: number;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
   created_at: string;
 
   @Column({ type: 'varchar', length: 30 })

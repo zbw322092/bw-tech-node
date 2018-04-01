@@ -83,7 +83,7 @@ export class AuthService {
 
     // check if this user has been invited, if invited, register this user using invited role, 
     // otherwise, register this user as visitor role as default.
-    const { invitedUsers, invitedUsersCount } = await this.invitesService.findInvitedUser(email);
+    const { invitedUsers, invitedUsersCount } = await this.invitesService.findInvitationByEmail(email);
     let roleId: string, createdBy: string;
     if (invitedUsersCount) {
       roleId = invitedUsers[invitedUsersCount - 1].role_id;
@@ -117,6 +117,10 @@ export class AuthService {
       await transactionalEntityManager.save(newUser);
       await transactionalEntityManager.save(newRolesUsers);
     });
+
+    await this.invitesService.addInvitation({roleId, email, createdBy: userId});
+    // TODO send verification email
+
 
     return createBySuccess({ message: 'Register Success', data: {} });
   }
