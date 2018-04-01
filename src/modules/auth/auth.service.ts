@@ -121,7 +121,6 @@ export class AuthService {
     await this.invitesService.addInvitation({roleId, email, createdBy: userId});
     // TODO send verification email
 
-
     return createBySuccess({ message: 'Register Success', data: {} });
   }
 

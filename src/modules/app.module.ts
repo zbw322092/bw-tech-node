@@ -9,10 +9,11 @@ import { InviteModule } from "./invites/invites.module";
 import { RolesModule } from "./roles/roles.module";
 import { CaptchaModule } from "./captcha/captcha.module";
 import { RolesUsersModule } from "./rolesusers/rolesusers.module";
+import nconf from "../config/config";
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UsersModule, PostsModule, AuthModule, InviteModule,
-    RolesUsersModule, RolesModule, CaptchaModule]
+  imports: [TypeOrmModule.forRoot(nconf.get('database')), UsersModule, PostsModule, AuthModule,
+    InviteModule, RolesUsersModule, RolesModule, CaptchaModule]
 })
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void {
