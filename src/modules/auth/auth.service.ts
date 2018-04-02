@@ -125,14 +125,18 @@ export class AuthService {
       await transactionalEntityManager.save(newRolesUsers);
     });
 
+    // add invitation
     const invitation = await this.invitesService.addInvitation({roleId, email, createdBy: userId});
-    // TODO send verification email
+
     const server = nconf.get('server');
     const url = `${server.protocol}://${server.host}`;
     const activeLink = path.join(url, 'active-account', encodeBase64(invitation.token), '/');
     const mailContent = mailContentGenerator('active-account', { username: name, activeLink });
     const mailSender = new MailSender(email, MailSubject.ActiveAccount, mailContent.text, mailContent.html);
     await mailSender.sendMail();
+
+    // update invitation status to 'sent'
+    await this.invitesService.updateInvitationStatus({ token: invitation.token, status: 'sent' });
 
     return createBySuccess({ message: 'Register Success', data: {} });
   }

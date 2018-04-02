@@ -2,7 +2,7 @@ import { Component } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Invites } from "./invites.entity";
 import { Repository } from "typeorm";
-import { AddInvitationDto } from "./dto/invites.dto";
+import { AddInvitationDto, UpdateStatusDto } from "./dto/invites.dto";
 import * as crypto from 'crypto';
 import { TimeConst } from "../common/const/TimeConst";
 import { uniqid } from "../../utils/uniqid";
@@ -52,7 +52,8 @@ export class InvitesService {
     return await this.invitesRepository.save(invitation);
   }
 
-  public async updateInvitation() {
-    
+  public async updateInvitationStatus(updateStatusDto: UpdateStatusDto) {
+    const { status, token } = updateStatusDto;
+    return await this.invitesRepository.update({ token }, { status });
   }
 }
