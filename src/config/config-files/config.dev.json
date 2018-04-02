@@ -1,5 +1,6 @@
 {
   "server": {
+    "protocol": "http",
     "host": "localhost",
     "port": 3333
   },
@@ -16,10 +17,10 @@
     "synchronize": true,
     "logging": false,
     "migrations": [
-      "src/data/migration/*{.ts,.js}"
+      "src/db/migration/*{.ts,.js}"
     ],
     "cli": {
-      "migrationsDir": "src/data/migration/"
+      "migrationsDir": "src/db/migration/"
     }
   },
   "expressMysqlSession": {
@@ -28,5 +29,14 @@
     "user": "root",
     "password": "root",
     "database": "bw_tech_node"
+  },
+  "mail": {
+    "transport": "SMTP",
+    "options": {
+      "host": "smtp-mail.outlook.com",
+      "port": 587,
+      "secure": false,
+      "logger": true
+    }
   }
 }

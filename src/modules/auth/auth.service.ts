@@ -12,6 +12,12 @@ import { Roles } from "../roles/roles.entity";
 import { uniqid } from "../../utils/uniqid";
 import { RolesUsers } from "../rolesusers/rolesusers.entity";
 import { IdPrefix } from "../common/const/IdPrefix";
+import { mailContentGenerator } from "../common/services/mail-sender/mailContentGenerator";
+import * as path from 'path';
+import nconf from "../../config/config";
+import { encodeBase64 } from "../../utils/url";
+import { MailSender } from "../common/services/mail-sender";
+import { MailSubject } from "../common/const/MailConst";
 const bcrypt = require('bcrypt');
 
 enum AuthResCode {
@@ -52,6 +58,7 @@ export class AuthService {
     if (session.captcha !== captcha) {
       return createByFail({code: AuthResCode.incorrectCaptcha, message: AuthResMsg.incorrectCaptcha });
     }
+    delete session.captcha;
 
     // check email validation
     if (!isValidEmail(email)) {
@@ -118,8 +125,14 @@ export class AuthService {
       await transactionalEntityManager.save(newRolesUsers);
     });
 
-    await this.invitesService.addInvitation({roleId, email, createdBy: userId});
+    const invitation = await this.invitesService.addInvitation({roleId, email, createdBy: userId});
     // TODO send verification email
+    const server = nconf.get('server');
+    const url = `${server.protocol}://${server.host}`;
+    const activeLink = path.join(url, 'active-account', encodeBase64(invitation.token), '/');
+    const mailContent = mailContentGenerator('active-account', { username: name, activeLink });
+    const mailSender = new MailSender(email, MailSubject.ActiveAccount, mailContent.text, mailContent.html);
+    await mailSender.sendMail();
 
     return createBySuccess({ message: 'Register Success', data: {} });
   }

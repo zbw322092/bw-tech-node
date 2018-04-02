@@ -1,1 +1,5 @@
 node_modules
+
+src/config/config-files/config.private.**
+
+yarn-error.log

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/0.27.5_1/libexec/bin/yarn.js add bcrypt
+  /usr/local/bin/node /usr/local/Cellar/yarn/0.27.5_1/libexec/bin/yarn.js add html-to-text
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin:/Users/zhongbowen/Documents/workspace_Java_essential/apache-maven-3.5.2/bin:/Users/zhongbowen/Documents/workspace_Java_essential/apache-maven-3.5.2/bin
@@ -37,6 +37,7 @@ npm manifest:
       "express-mysql-session": "^1.2.3",
       "express-session": "^1.15.6",
       "json-typescript-mapper": "^1.1.3",
+      "lodash": "^4.17.5",
       "macaddress": "^0.2.8",
       "moment": "^2.21.0",
       "moment-timezone": "^0.5.14",
@@ -56,6 +57,7 @@ npm manifest:
     "devDependencies": {
       "@types/bcryptjs": "^2.4.1",
       "@types/express-session": "^1.15.8",
+      "@types/lodash": "^4.14.106",
       "@types/nconf": "^0.0.37",
       "@types/node": "^9.6.1",
       "@types/nodemailer": "^4.6.0",
@@ -158,6 +160,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.5.tgz#413159d570ec45fc3e7da7ea3f7bca6fb9300e72"
     dependencies:
       "@types/node" "*"
+  
+  "@types/lodash@^4.14.106":
+    version "4.14.106"
+    resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
   
   "@types/mime@*":
     version "2.0.0"
@@ -1356,6 +1362,10 @@ Lockfile:
   lodash.once@^4.0.0:
     version "4.1.1"
     resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
+  
+  lodash@^4.17.5:
+    version "4.17.5"
+    resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
   
   lru-cache@^4.0.1:
     version "4.1.2"

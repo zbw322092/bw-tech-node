@@ -25,5 +25,6 @@ nconf.env();
  * load configurations according to env
  */
 nconf.file('configEnv', path.join(baseConfigFilePath, `config.${env}.json`));
+nconf.file('configEnvPrivate', path.join(baseConfigFilePath, `config.private.${env}.json`));
 
 export default nconf;
