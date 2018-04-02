@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Session } from "@nestjs/common";
 import { Users } from "../users/users.entity";
-import { SignupDto, EmailAvaliableDto, NameAvaliableDto } from "./dto/auth.dto";
+import { SignupDto, EmailAvaliableDto, NameAvaliableDto, ActiveAccountDto } from "./dto/auth.dto";
 import { AuthService } from "./auth.service";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 
@@ -22,5 +22,10 @@ export class AuthController {
   @Post('/name_avaliable')
   public isNameAvaliable(@Body('param') nameAvaliableDto: NameAvaliableDto) {
     return this.authService.nameAvaliable(nameAvaliableDto.name);
+  }
+
+  @Post('/active_account')
+  public activeAccount(@Session() session, @Body('param') activeAccountDto: ActiveAccountDto) {
+    return this.authService.activeAccount(session, activeAccountDto.token);
   }
 }

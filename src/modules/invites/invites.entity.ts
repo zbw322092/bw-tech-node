@@ -12,7 +12,7 @@ export class Invites {
   @Column({ type: 'varchar', length: 50 })
   status: string;
 
-  @Column({ type: 'varchar', length: 191 })
+  @Column({ type: 'varchar', length: 300 })
   token: string;
 
   @Column({ type: 'varchar', length: 191 })

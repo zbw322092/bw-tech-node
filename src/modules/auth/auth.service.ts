@@ -6,7 +6,7 @@ import { Repository, getRepository, getManager } from "typeorm";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { createBySuccess, createByFail } from "../common/serverResponse/ServerResponse";
 import { isValidEmail, passwordValidator } from "../../utils/validator";
-import { errorValidation } from "../common/serverResponse/Const.Error";
+import { errorAuth } from "../common/serverResponse/Const.Error";
 import { InvitesService } from "../invites/invites.service";
 import { Roles } from "../roles/roles.entity";
 import { uniqid } from "../../utils/uniqid";
@@ -15,9 +15,11 @@ import { IdPrefix } from "../common/const/IdPrefix";
 import { mailContentGenerator } from "../common/services/mail-sender/mailContentGenerator";
 import * as path from 'path';
 import nconf from "../../config/config";
-import { encodeBase64 } from "../../utils/url";
+import { encodeBase64, decodeBase64 } from "../../utils/url";
 import { MailSender } from "../common/services/mail-sender";
 import { MailSubject } from "../common/const/MailConst";
+import { Invites } from "../invites/invites.entity";
+import { getCurrentDatetime } from "../../utils/timeHandler";
 const bcrypt = require('bcrypt');
 
 enum AuthResCode {
@@ -27,7 +29,9 @@ enum AuthResCode {
   'commonPwd' = '1004',
   'pwdSameAsEmail' = '1005',
   'unavaliableName' = '1006',
-  'incorrectCaptcha'= '1007'
+  'incorrectCaptcha'= '1007',
+  'incorrectActiveToken' = '1008',
+  'activeTokenExpired' = '1009'
 }
 
 enum AuthResMsg {
@@ -37,14 +41,16 @@ enum AuthResMsg {
   'commonPwd' = 'password is easy to guess',
   'pwdSameAsEmail' = 'password must not the same as email',
   'unavaliableName' = 'name has been taken',
-  'incorrectCaptcha'= 'incorrect captcha'
+  'incorrectCaptcha'= 'incorrect captcha',
+  'incorrectActiveToken' = 'incorrect activation token',
+  'activeTokenExpired' = 'active token expired, please resend activtaion email'
 }
 
 @Component()
 export class AuthService {
   constructor(
     @InjectRepository(Users)
-    private userRepository: Repository<Users>,
+    private usersRepository: Repository<Users>,
     @InjectRepository(Roles)
     private roleRespository: Repository<Roles>,
     @InjectRepository(RolesUsers)
@@ -56,36 +62,36 @@ export class AuthService {
     const { email, name, password, captcha } = signupDto;
     // check captcha
     if (session.captcha !== captcha) {
-      return createByFail({code: AuthResCode.incorrectCaptcha, message: AuthResMsg.incorrectCaptcha });
+      return createByFail({code: errorAuth(AuthResCode.incorrectCaptcha), message: AuthResMsg.incorrectCaptcha });
     }
     delete session.captcha;
 
     // check email validation
     if (!isValidEmail(email)) {
-      return createByFail({ code: errorValidation(AuthResCode.invalidEmail), message: AuthResMsg.invalidEmail });
+      return createByFail({ code: errorAuth(AuthResCode.invalidEmail), message: AuthResMsg.invalidEmail });
     }
 
     // check password validation
     const pwdValidation = passwordValidator(password, email);
     if (!pwdValidation.isValid) {
       if (pwdValidation.error === 0) {
-        return createByFail({ code: errorValidation(AuthResCode.weakPwd), message: AuthResMsg.weakPwd });
+        return createByFail({ code: errorAuth(AuthResCode.weakPwd), message: AuthResMsg.weakPwd });
       } else if (pwdValidation.error === 1) {
-        return createByFail({ code: errorValidation(AuthResCode.commonPwd), message: AuthResMsg.commonPwd });
+        return createByFail({ code: errorAuth(AuthResCode.commonPwd), message: AuthResMsg.commonPwd });
       } else if (pwdValidation.error === 2) {
-        return createByFail({ code: errorValidation(AuthResCode.pwdSameAsEmail), message: AuthResMsg.pwdSameAsEmail });
+        return createByFail({ code: errorAuth(AuthResCode.pwdSameAsEmail), message: AuthResMsg.pwdSameAsEmail });
       }
     }
 
     // check email avaliable
     const emailAvaliable = await this.checkEmailAvaliable(email);
     if (emailAvaliable) {
-      return createByFail({ code: errorValidation(AuthResCode.unavaliableEmail), message: AuthResMsg.unavaliableEmail });
+      return createByFail({ code: errorAuth(AuthResCode.unavaliableEmail), message: AuthResMsg.unavaliableEmail });
     }
     // check name avaliable
     const nameAvaliable = await this.checkNameAvaliable(name);
     if (nameAvaliable) {
-      return createByFail({ code: errorValidation(AuthResCode.unavaliableName), message: AuthResMsg.unavaliableName });
+      return createByFail({ code: errorAuth(AuthResCode.unavaliableName), message: AuthResMsg.unavaliableName });
     }
 
     // check if this user has been invited, if invited, register this user using invited role, 
@@ -105,7 +111,7 @@ export class AuthService {
     const saltRounds = 10;
     const encryptedPwd = await bcrypt.hash(password, saltRounds);
 
-    const newUser = this.userRepository.create({
+    const newUser = this.usersRepository.create({
       id: userId,
       name,
       email,
@@ -136,30 +142,59 @@ export class AuthService {
     await mailSender.sendMail();
 
     // update invitation status to 'sent'
-    await this.invitesService.updateInvitationStatus({ token: invitation.token, status: 'sent' });
+    await this.invitesService.updateInvitationStatus({ token: invitation.token, status: 'sent', updatedBy: userId });
+
+    // add userId to session
+    session.userId = userId;
 
     return createBySuccess({ message: 'Register Success', data: {} });
   }
 
   private async checkEmailAvaliable(email: string): Promise<number> {
-    const [userRecords, userCount] = await this.userRepository.findAndCount({ email });
+    const [userRecords, userCount] = await this.usersRepository.findAndCount({ email });
     return userCount;
   }
 
   private async checkNameAvaliable(name: string): Promise<number> {
-    const [userRecords, userCount] = await this.userRepository.findAndCount({ name });
+    const [userRecords, userCount] = await this.usersRepository.findAndCount({ name });
     return userCount;
   }
 
   public async emailAvaliable(email: string): Promise<ICommonResponse<any>> {
     const count = await this.checkEmailAvaliable(email);
-    return count ? createByFail({ code: AuthResCode.unavaliableEmail, message: AuthResMsg.unavaliableEmail }) :
+    return count ? createByFail({ code: errorAuth(AuthResCode.unavaliableEmail), message: AuthResMsg.unavaliableEmail }) :
     createBySuccess({ message: 'email avaliable', data: {} });
   }
 
   public async nameAvaliable(name: string): Promise<ICommonResponse<any>> {
     const count = await this.checkNameAvaliable(name);
-    return count ? createByFail({ code: AuthResCode.unavaliableName, message: AuthResMsg.unavaliableName }) :
+    return count ? createByFail({ code: errorAuth(AuthResCode.unavaliableName), message: AuthResMsg.unavaliableName }) :
     createBySuccess({ message: 'name avaliable', data: {} });
+  }
+
+  public async activeAccount(session, token: string) {
+    const inviteToken = decodeBase64(token);
+    const invitation = await this.invitesService.findInvitationByToken(inviteToken);
+    if (!invitation.length) {
+      // no such account activation invitaion
+      return createByFail({ code: errorAuth(AuthResCode.incorrectActiveToken), message: AuthResMsg.incorrectActiveToken });
+    }
+    if (invitation[0].expires < Date.now()) {
+      return createByFail({ code: errorAuth(AuthResCode.activeTokenExpired), message: AuthResMsg.activeTokenExpired });
+    }
+    const email = invitation[0].email;
+    let userId = session.userId;
+    if (!userId) {
+      const user = await this.usersRepository.findOne({ email });
+      userId = user.id;
+      session.userId = userId;
+    }
+
+    await getManager().transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.update(Invites, { token: inviteToken }, { status: 'accepted', updated_at: getCurrentDatetime(), updated_by: userId });
+      await transactionalEntityManager.update(Users, { email }, { status: 'active', updated_at: getCurrentDatetime(), updated_by: userId });
+    });
+
+    return createBySuccess({ message: 'account actived successfully', data: {} });
   }
 }

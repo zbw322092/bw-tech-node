@@ -9,6 +9,7 @@ import { uniqid } from "../../utils/uniqid";
 import { IdPrefix } from "../common/const/IdPrefix";
 import { Roles } from "../roles/roles.entity";
 import { RequestErrorException } from "../common/exceptions/exceptions";
+import { getCurrentDatetime } from "../../utils/timeHandler";
 
 @Component()
 export class InvitesService {
@@ -19,21 +20,26 @@ export class InvitesService {
     private readonly rolesRepository: Repository<Roles>
   ) { }
 
-  public async findInvitationByEmail(email: string): Promise<{invitedUsers: Invites[], invitedUsersCount: number}> {
-    const [ invitedUsers, invitedUsersCount ] = await this.invitesRepository.findAndCount({ email });
+  public async findInvitationByEmail(email: string): Promise<{ invitedUsers: Invites[], invitedUsersCount: number }> {
+    const [invitedUsers, invitedUsersCount] = await this.invitesRepository.findAndCount({ email });
     return {
       invitedUsers,
       invitedUsersCount
     };
   }
 
-  public async addInvitation(addInvitationDto: AddInvitationDto) {
+  public async findInvitationByToken(token: string): Promise<Invites[]> {
+    const invitedUsers = await this.invitesRepository.find({ token });
+    return invitedUsers;
+  }
+
+  public async addInvitation(addInvitationDto: AddInvitationDto): Promise<Invites> {
     const { roleId, email, createdBy } = addInvitationDto;
     const hash = crypto.createHash('sha256');
     const expires = Date.now() + TimeConst.TEN_MINUTES_MS;
     hash.update(String(expires));
     hash.update(email.toLocaleLowerCase());
-    const tokenText = [expires, email, hash.digest('base64')].join('|');
+    const tokenText = ['token-secert-r', expires, email, hash.digest('base64')].join('|');
     const token = new Buffer(tokenText).toString('base64');
 
     const roleRecord = await this.rolesRepository.findOneById(roleId);
@@ -52,8 +58,12 @@ export class InvitesService {
     return await this.invitesRepository.save(invitation);
   }
 
-  public async updateInvitationStatus(updateStatusDto: UpdateStatusDto) {
-    const { status, token } = updateStatusDto;
-    return await this.invitesRepository.update({ token }, { status });
+  public async updateInvitationStatus(updateStatusDto: UpdateStatusDto): Promise<void> {
+    const { status, token, updatedBy } = updateStatusDto;
+    return await this.invitesRepository.update({ token }, {
+      status,
+      updated_at: getCurrentDatetime(),
+      updated_by: updatedBy
+    });
   }
 }

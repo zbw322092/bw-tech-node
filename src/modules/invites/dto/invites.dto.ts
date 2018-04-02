@@ -19,4 +19,7 @@ export class UpdateStatusDto {
   @Length(1,50)
   @IsIn(['pending', 'sent', 'accepted'])
   status: StatusType;
+
+  @Length(1,30)
+  updatedBy: string;
 }

@@ -7,7 +7,7 @@ import { uniqid } from "../../utils/uniqid";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { createByFail, createBySuccess } from "../common/serverResponse/ServerResponse";
 import { errorRole } from "../common/serverResponse/Const.Error";
-import { getNowDatetime } from "../../utils/timeHandler";
+import { getCurrentDatetime } from "../../utils/timeHandler";
 
 @Component()
 export class RolesService {
@@ -65,7 +65,7 @@ export class RolesService {
     await this.rolesRepository.updateById(id, {
       name,
       description,
-      updated_at: getNowDatetime(),
+      updated_at: getCurrentDatetime(),
       updated_by: 'temp-system-admin' // TODO add real user
     });
 

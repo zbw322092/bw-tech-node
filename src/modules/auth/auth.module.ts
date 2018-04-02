@@ -5,7 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Users } from "../users/users.entity";
 import { InviteModule } from "../invites/invites.module";
 import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
-import { EmailAvaliableDto, NameAvaliableDto, SignupDto } from "./dto/auth.dto";
+import { EmailAvaliableDto, NameAvaliableDto, SignupDto, ActiveAccountDto } from "./dto/auth.dto";
 import { UsersModule } from "../users/users.module";
 import { RolesUsersModule } from "../rolesusers/rolesusers.module";
 import { RolesModule } from "../roles/roles.module";
@@ -27,6 +27,9 @@ export class AuthModule implements NestModule {
     );
     consumer.apply(RequestParamValidationMiddleware).with(SignupDto).forRoutes(
       { path: '/auth/signup', method: RequestMethod.POST }
+    );
+    consumer.apply(RequestParamValidationMiddleware).with(ActiveAccountDto).forRoutes(
+      { path: '/auth/active_account', method: RequestMethod.POST }
     );
   }
 }

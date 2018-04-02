@@ -25,3 +25,8 @@ export class NameAvaliableDto {
   @Length(1, 191)
   readonly name: string = '';
 }
+
+export class ActiveAccountDto {
+  @Length(1, 300)
+  readonly token: string = '';
+}
