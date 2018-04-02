@@ -51,4 +51,8 @@ export class InvitesService {
 
     return await this.invitesRepository.save(invitation);
   }
+
+  public async updateInvitation() {
+    
+  }
 }
