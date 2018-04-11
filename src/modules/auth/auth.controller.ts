@@ -9,7 +9,7 @@ export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/signup')
+  @Post('/sign_up')
   public signup(@Session() session, @Body('param') signupDto: SignupDto): Promise<ICommonResponse<any>> {
     return this.authService.signup(session, signupDto);
   }
@@ -27,5 +27,11 @@ export class AuthController {
   @Post('/active_account')
   public activeAccount(@Session() session, @Body('param') activeAccountDto: ActiveAccountDto) {
     return this.authService.activeAccount(session, activeAccountDto.token);
+  }
+
+  @Post('/sign_in')
+  public signIn(): Promise<ICommonResponse<any>> {
+    // todo
+    return null;
   }
 }
