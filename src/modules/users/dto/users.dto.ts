@@ -30,3 +30,12 @@ export class ActiveAccountDto {
   @Length(1, 300)
   readonly token: string = '';
 }
+
+export class SigninDto {
+  @Length(5, 191)
+  @IsEmail()
+  readonly email: string = '';
+
+  @Length(6, 60)
+  readonly password: string = '';
+}

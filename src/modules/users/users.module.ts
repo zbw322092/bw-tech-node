@@ -1,3 +1,4 @@
+import * as passport from 'passport';
 import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from "@nestjs/common";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
@@ -5,7 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Users } from "./users.entity";
 import { InviteModule } from "../invites/invites.module";
 import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
-import { EmailAvaliableDto, NameAvaliableDto, SignupDto, ActiveAccountDto } from "./dto/users.dto";
+import { EmailAvaliableDto, NameAvaliableDto, SignupDto, ActiveAccountDto, SigninDto } from "./dto/users.dto";
 import { RolesUsersModule } from "../rolesusers/rolesusers.module";
 import { RolesModule } from "../roles/roles.module";
 import { Roles } from "../roles/roles.entity";
@@ -29,6 +30,9 @@ export class UsersModule implements NestModule {
     );
     consumer.apply(RequestParamValidationMiddleware).with(ActiveAccountDto).forRoutes(
       { path: '/users/active_account', method: RequestMethod.POST }
+    );
+    consumer.apply(RequestParamValidationMiddleware).with(SigninDto).forRoutes(
+      { path: '/users/sign_in', method: RequestMethod.POST }
     );
   }
 }

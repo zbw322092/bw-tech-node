@@ -7,5 +7,7 @@ functionCodeToRouteMapping.set('active_account', '/users/active_account');
 functionCodeToRouteMapping.set('add_role', '/roles/add_role');
 functionCodeToRouteMapping.set('update_role', '/roles/update_role');
 functionCodeToRouteMapping.set('get_captcha', '/captcha/get_captcha');
+functionCodeToRouteMapping.set('sign_in', '/users/sign_in');
+functionCodeToRouteMapping.set('sign_out', '/users/sign_out');
 
 export default functionCodeToRouteMapping;

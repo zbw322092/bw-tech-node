@@ -1,12 +1,12 @@
 import { Component } from "@nestjs/common";
-import { SignupDto } from "./dto/users.dto";
+import { SignupDto, SigninDto } from "./dto/users.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "./users.entity";
 import { Repository, getRepository, getManager } from "typeorm";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { createBySuccess, createByFail } from "../common/serverResponse/ServerResponse";
 import { isValidEmail, passwordValidator } from "../../utils/validator";
-import { errorAuth } from "../common/serverResponse/Const.Error";
+import { errorUser } from "../common/serverResponse/Const.Error";
 import { InvitesService } from "../invites/invites.service";
 import { Roles } from "../roles/roles.entity";
 import { uniqid } from "../../utils/uniqid";
@@ -22,7 +22,7 @@ import { Invites } from "../invites/invites.entity";
 import { getCurrentDatetime } from "../../utils/timeHandler";
 const bcrypt = require('bcrypt');
 
-enum AuthResCode {
+enum UserResCode {
   'invalidEmail' = '1001',
   'unavaliableEmail' = '1002',
   'weakPwd' = '1003',
@@ -31,10 +31,11 @@ enum AuthResCode {
   'unavaliableName' = '1006',
   'incorrectCaptcha'= '1007',
   'incorrectActiveToken' = '1008',
-  'activeTokenExpired' = '1009'
+  'activeTokenExpired' = '1009',
+  'emailPwdNotMatch' = '1010'
 }
 
-enum AuthResMsg {
+enum UserResMsg {
   'invalidEmail' = 'email is not valid',
   'unavaliableEmail' = 'email alreay registered',
   'weakPwd' = 'password must contains lowercase, uppercase, numeric, special character and at least 8 digital long.',
@@ -43,7 +44,8 @@ enum AuthResMsg {
   'unavaliableName' = 'name has been taken',
   'incorrectCaptcha'= 'incorrect captcha',
   'incorrectActiveToken' = 'incorrect activation token',
-  'activeTokenExpired' = 'active token expired, please resend activtaion email'
+  'activeTokenExpired' = 'active token expired, please resend activtaion email',
+  'emailPwdNotMatch' = 'email and password are not match'
 }
 
 @Component()
@@ -58,40 +60,40 @@ export class UsersService {
     private readonly invitesService: InvitesService
   ) { }
 
-  public async signup(session, signupDto: SignupDto): Promise<ICommonResponse<any>> {
+  public async signup(session: any, signupDto: SignupDto): Promise<ICommonResponse<any>> {
     const { email, name, password, captcha } = signupDto;
     // check captcha
     if (session.captcha !== captcha) {
-      return createByFail({code: errorAuth(AuthResCode.incorrectCaptcha), message: AuthResMsg.incorrectCaptcha });
+      return createByFail({code: errorUser(UserResCode.incorrectCaptcha), message: UserResMsg.incorrectCaptcha });
     }
     delete session.captcha;
 
     // check email validation
     if (!isValidEmail(email)) {
-      return createByFail({ code: errorAuth(AuthResCode.invalidEmail), message: AuthResMsg.invalidEmail });
+      return createByFail({ code: errorUser(UserResCode.invalidEmail), message: UserResMsg.invalidEmail });
     }
 
     // check password validation
     const pwdValidation = passwordValidator(password, email);
     if (!pwdValidation.isValid) {
       if (pwdValidation.error === 0) {
-        return createByFail({ code: errorAuth(AuthResCode.weakPwd), message: AuthResMsg.weakPwd });
+        return createByFail({ code: errorUser(UserResCode.weakPwd), message: UserResMsg.weakPwd });
       } else if (pwdValidation.error === 1) {
-        return createByFail({ code: errorAuth(AuthResCode.commonPwd), message: AuthResMsg.commonPwd });
+        return createByFail({ code: errorUser(UserResCode.commonPwd), message: UserResMsg.commonPwd });
       } else if (pwdValidation.error === 2) {
-        return createByFail({ code: errorAuth(AuthResCode.pwdSameAsEmail), message: AuthResMsg.pwdSameAsEmail });
+        return createByFail({ code: errorUser(UserResCode.pwdSameAsEmail), message: UserResMsg.pwdSameAsEmail });
       }
     }
 
     // check email avaliable
     const emailAvaliable = await this.checkEmailAvaliable(email);
     if (emailAvaliable) {
-      return createByFail({ code: errorAuth(AuthResCode.unavaliableEmail), message: AuthResMsg.unavaliableEmail });
+      return createByFail({ code: errorUser(UserResCode.unavaliableEmail), message: UserResMsg.unavaliableEmail });
     }
     // check name avaliable
     const nameAvaliable = await this.checkNameAvaliable(name);
     if (nameAvaliable) {
-      return createByFail({ code: errorAuth(AuthResCode.unavaliableName), message: AuthResMsg.unavaliableName });
+      return createByFail({ code: errorUser(UserResCode.unavaliableName), message: UserResMsg.unavaliableName });
     }
 
     // check if this user has been invited, if invited, register this user using invited role, 
@@ -162,25 +164,25 @@ export class UsersService {
 
   public async emailAvaliable(email: string): Promise<ICommonResponse<any>> {
     const count = await this.checkEmailAvaliable(email);
-    return count ? createByFail({ code: errorAuth(AuthResCode.unavaliableEmail), message: AuthResMsg.unavaliableEmail }) :
+    return count ? createByFail({ code: errorUser(UserResCode.unavaliableEmail), message: UserResMsg.unavaliableEmail }) :
     createBySuccess({ message: 'email avaliable', data: {} });
   }
 
   public async nameAvaliable(name: string): Promise<ICommonResponse<any>> {
     const count = await this.checkNameAvaliable(name);
-    return count ? createByFail({ code: errorAuth(AuthResCode.unavaliableName), message: AuthResMsg.unavaliableName }) :
+    return count ? createByFail({ code: errorUser(UserResCode.unavaliableName), message: UserResMsg.unavaliableName }) :
     createBySuccess({ message: 'name avaliable', data: {} });
   }
 
-  public async activeAccount(session, token: string) {
+  public async activeAccount(session: any, token: string) {
     const inviteToken = decodeBase64(token);
     const invitation = await this.invitesService.findInvitationByToken(inviteToken);
     if (!invitation.length) {
       // no such account activation invitaion
-      return createByFail({ code: errorAuth(AuthResCode.incorrectActiveToken), message: AuthResMsg.incorrectActiveToken });
+      return createByFail({ code: errorUser(UserResCode.incorrectActiveToken), message: UserResMsg.incorrectActiveToken });
     }
     if (invitation[0].expires < Date.now()) {
-      return createByFail({ code: errorAuth(AuthResCode.activeTokenExpired), message: AuthResMsg.activeTokenExpired });
+      return createByFail({ code: errorUser(UserResCode.activeTokenExpired), message: UserResMsg.activeTokenExpired });
     }
     const email = invitation[0].email;
     let userId = session.userId;
@@ -196,5 +198,24 @@ export class UsersService {
     });
 
     return createBySuccess({ message: 'account actived successfully', data: {} });
+  }
+
+  public async signIn(session: any, siginDto: SigninDto): Promise<ICommonResponse<any>> {
+    const { email, password } = siginDto;
+    const user = await this.usersRepository.findOne({ email });
+    if (!user) {
+      return createByFail({ code: errorUser(UserResCode.emailPwdNotMatch), message: UserResMsg.emailPwdNotMatch });
+    }
+    const pwdValidation = await bcrypt.compare(password, user.password);
+    if (!pwdValidation) {
+      return createByFail({ code: errorUser(UserResCode.emailPwdNotMatch), message: UserResMsg.emailPwdNotMatch });
+    }
+    session.logined = true;
+    return createBySuccess({ message: 'sign in successfully', data: {} });
+  }
+
+  public async signOut(session: any): Promise<ICommonResponse<any>> {
+    delete session.logined;
+    return createBySuccess({ message: 'sign out successfully', data: {} });
   }
 }
