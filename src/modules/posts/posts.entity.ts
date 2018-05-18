@@ -3,15 +3,13 @@ import { Entity, PrimaryColumn, Column } from "typeorm";
 @Entity()
 export class Posts {
 
-  constructor($id: string, $uuid: string, $title: string, $html: string, $plaintext: string, $feature_image: string, $featured: string, $page: string, $status: string, $visibility: string, $meta_title: string, $meta_description: string, $author_id: string, $created_at: string, $created_by: string, $updated_at: string, $updated_by: string, $published_at: string, $published_by: string, $custom_excerpt: string) {
+  constructor($id: string, $title: string, $html: string, $plaintext: string, $feature_image: string, $featured: string, $status: string, $visibility: string, $meta_title: string, $meta_description: string, $author_id: string, $created_at: string, $created_by: string, $updated_at: string, $updated_by: string, $published_at: string, $published_by: string, $custom_excerpt: string) {
     this.id = $id;
-    this.uuid = $uuid;
     this.title = $title;
     this.html = $html;
     this.plaintext = $plaintext;
     this.feature_image = $feature_image;
     this.featured = $featured;
-    this.page = $page;
     this.status = $status;
     this.visibility = $visibility;
     this.meta_title = $meta_title;
@@ -29,9 +27,6 @@ export class Posts {
   @PrimaryColumn({ type: 'varchar', length: 30 })
   private id: string;
 
-  @Column({ type: 'varchar', length: 30 })
-  private uuid: string;
-
   @Column({ type: 'varchar', length: 2000 })
   private title: string;
 
@@ -44,11 +39,8 @@ export class Posts {
   @Column({ type: 'varchar', default: null })
   private feature_image: string | null;
 
-  @Column({ type: 'tinyint', default: '0' })
+  @Column({ type: 'tinyint', default: 0 })
   private featured: string;
-
-  @Column({ type: 'tinyint', default: '0' })
-  private page: string;
 
   @Column({ type: 'varchar', length: 50, default: 'draft' })
   private status: string;
@@ -65,7 +57,7 @@ export class Posts {
   @Column({ type: 'varchar', length: 30 })
   private author_id: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
   private created_at: string;
 
   @Column({ type: 'varchar', length: 30 })
@@ -93,14 +85,6 @@ export class Posts {
    */
   public get getId(): string {
     return this.id;
-  }
-
-  /**
-   * Getter getUuid
-   * @return {string}
-   */
-  public get getUuid(): string {
-    return this.uuid;
   }
 
   /**
@@ -141,14 +125,6 @@ export class Posts {
    */
   public get getFeatured(): string {
     return this.featured;
-  }
-
-  /**
-   * Getter getPage
-   * @return {string}
-   */
-  public get getPage(): string {
-    return this.page;
   }
 
   /**
@@ -256,14 +232,6 @@ export class Posts {
   }
 
   /**
-   * Setter setUuid
-   * @param {string} value
-   */
-  public set setUuid(value: string) {
-    this.uuid = value;
-  }
-
-  /**
    * Setter setTitle
    * @param {string} value
    */
@@ -301,14 +269,6 @@ export class Posts {
    */
   public set setFeatured(value: string) {
     this.featured = value;
-  }
-
-  /**
-   * Setter setPage
-   * @param {string} value
-   */
-  public set setPage(value: string) {
-    this.page = value;
   }
 
   /**

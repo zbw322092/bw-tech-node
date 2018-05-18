@@ -8,10 +8,13 @@ import { RolesModule } from "./roles/roles.module";
 import { CaptchaModule } from "./captcha/captcha.module";
 import { RolesUsersModule } from "./rolesusers/rolesusers.module";
 import nconf from "../config/config";
+import { PermissionModule } from "./permission/permission.module";
+import { PermissionRoleModule } from "./permissionrole/permission.role.module";
 
 @Module({
   imports: [TypeOrmModule.forRoot(nconf.get('database')), UsersModule, PostsModule,
-    InviteModule, RolesUsersModule, RolesModule, CaptchaModule]
+    InviteModule, RolesUsersModule, RolesModule, CaptchaModule, PermissionModule,
+    PermissionRoleModule]
 })
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void {

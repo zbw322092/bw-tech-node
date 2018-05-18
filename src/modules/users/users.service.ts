@@ -211,11 +211,13 @@ export class UsersService {
       return createByFail({ code: errorUser(UserResCode.emailPwdNotMatch), message: UserResMsg.emailPwdNotMatch });
     }
     session.logined = true;
+    session.userId = user.id;
     return createBySuccess({ message: 'sign in successfully', data: {} });
   }
 
   public async signOut(session: any): Promise<ICommonResponse<any>> {
     delete session.logined;
+    delete session.userId;
     return createBySuccess({ message: 'sign out successfully', data: {} });
   }
 }
