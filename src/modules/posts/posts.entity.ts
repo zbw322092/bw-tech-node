@@ -3,27 +3,6 @@ import { Entity, PrimaryColumn, Column } from "typeorm";
 @Entity()
 export class Posts {
 
-  constructor($id: string, $title: string, $html: string, $plaintext: string, $feature_image: string, $featured: string, $status: string, $visibility: string, $meta_title: string, $meta_description: string, $author_id: string, $created_at: string, $created_by: string, $updated_at: string, $updated_by: string, $published_at: string, $published_by: string, $custom_excerpt: string) {
-    this.id = $id;
-    this.title = $title;
-    this.html = $html;
-    this.plaintext = $plaintext;
-    this.feature_image = $feature_image;
-    this.featured = $featured;
-    this.status = $status;
-    this.visibility = $visibility;
-    this.meta_title = $meta_title;
-    this.meta_description = $meta_description;
-    this.author_id = $author_id;
-    this.created_at = $created_at;
-    this.created_by = $created_by;
-    this.updated_at = $updated_at;
-    this.updated_by = $updated_by;
-    this.published_at = $published_at;
-    this.published_by = $published_by;
-    this.custom_excerpt = $custom_excerpt;
-  }
-
   @PrimaryColumn({ type: 'varchar', length: 30 })
   private id: string;
 

@@ -9,5 +9,6 @@ functionCodeToRouteMapping.set('update_role', '/roles/update_role');
 functionCodeToRouteMapping.set('get_captcha', '/captcha/get_captcha');
 functionCodeToRouteMapping.set('sign_in', '/users/sign_in');
 functionCodeToRouteMapping.set('sign_out', '/users/sign_out');
+functionCodeToRouteMapping.set('add_permission', '/permission/add_permission');
 
 export default functionCodeToRouteMapping;
