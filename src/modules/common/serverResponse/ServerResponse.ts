@@ -1,4 +1,5 @@
 import { ICommonResponse } from "../interfaces/ICommonResponse";
+import { COMMONSERVERERROR, LOGINREQUIRED } from "./Const.Error";
 
 /**
  * - `code` - response code.
@@ -26,4 +27,18 @@ export function createByFail(response: { code: string, message?: string, data?: 
     message: response.message || 'fail',
     data: response.data || {}
   };
+}
+
+/**
+ * Common server error response
+ */
+export function createByServerError(): ICommonResponse<{}> {
+  return createByFail({ code: COMMONSERVERERROR, message: 'server error' });
+}
+
+/**
+ * Common login required response
+ */
+export function createByLoginRequired(): ICommonResponse<{}> {
+  return createByFail({ code: LOGINREQUIRED, message: 'login required' });
 }

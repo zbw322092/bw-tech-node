@@ -23,16 +23,16 @@ import { getCurrentDatetime } from "../../utils/timeHandler";
 const bcrypt = require('bcrypt');
 
 enum UserResCode {
-  'invalidEmail' = '1001',
-  'unavaliableEmail' = '1002',
-  'weakPwd' = '1003',
-  'commonPwd' = '1004',
-  'pwdSameAsEmail' = '1005',
-  'unavaliableName' = '1006',
-  'incorrectCaptcha'= '1007',
-  'incorrectActiveToken' = '1008',
-  'activeTokenExpired' = '1009',
-  'emailPwdNotMatch' = '1010'
+  'invalidEmail' = 'USER.1001',
+  'unavaliableEmail' = 'USER.1002',
+  'weakPwd' = 'USER.1003',
+  'commonPwd' = 'USER.1004',
+  'pwdSameAsEmail' = 'USER.1005',
+  'unavaliableName' = 'USER.1006',
+  'incorrectCaptcha'= 'USER.1007',
+  'incorrectActiveToken' = 'USER.1008',
+  'activeTokenExpired' = 'USER.1009',
+  'emailPwdNotMatch' = 'USER.1010'
 }
 
 enum UserResMsg {

@@ -3,4 +3,5 @@ export namespace IdPrefix {
   export const Invites = 'invite-';
   export const Post = 'post-';
   export const Permission = 'permission-'
+  export const PermissionRole = 'permissionrole-'
 }

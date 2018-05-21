@@ -3,7 +3,7 @@ import { Entity, PrimaryColumn, Column } from "typeorm";
 @Entity()
 export class Posts {
 
-  @PrimaryColumn({ type: 'varchar', length: 30 })
+  @PrimaryColumn({ type: 'varchar', length: 50 })
   private id: string;
 
   @Column({ type: 'varchar', length: 2000 })
@@ -33,25 +33,25 @@ export class Posts {
   @Column({ type: 'varchar', length: 2000, default: null })
   private meta_description: string | null;
 
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar', length: 50 })
   private author_id: string;
 
   @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
   private created_at: string;
 
-  @Column({ type: 'varchar', length: 30 })
+  @Column({ type: 'varchar', length: 50 })
   private created_by: string;
 
   @Column({ type: 'datetime', default: null })
   private updated_at: string | null;
 
-  @Column({ type: 'varchar', length: 30, default: null })
+  @Column({ type: 'varchar', length: 50, default: null })
   private updated_by: string | null;
 
   @Column({ type: 'datetime', default: null })
   private published_at: string | null;
 
-  @Column({ type: 'varchar', length: 30, default: null })
+  @Column({ type: 'varchar', length: 50, default: null })
   private published_by: string | null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
