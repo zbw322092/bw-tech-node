@@ -18,6 +18,7 @@ export class PostsService {
   }
 
   public async createPost(session: any, createPostDto: CreatePostDto): Promise<any> {
+    
     // const post = new Posts();
     // post.setId = uniqid(IdPrefix.Post);
     // post.setTitle = createPostDto.title;

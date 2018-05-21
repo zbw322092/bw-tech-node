@@ -8,6 +8,7 @@ import { createByFail, createByServerError, createBySuccess, createByLoginRequir
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { uniqid } from "../../utils/uniqid";
 import { IdPrefix } from "../common/const/IdPrefix";
+import { IPermissionRoleService } from "./interfaces/IPermissionRoleService";
 
 enum PermissionRoleResCode {
   'permissionRolePairExist' = 'PERMISSION.ROLE.1001',
@@ -18,7 +19,7 @@ enum PermissionRoleResMsg {
 }
 
 @Component()
-export class PermissionRoleService {
+export class PermissionRoleService implements IPermissionRoleService {
   constructor (
     @InjectRepository(PermissionRole)
     private readonly permissionRoleRepository: Repository<PermissionRole>
@@ -35,7 +36,7 @@ export class PermissionRoleService {
     } catch (e) { return createByServerError(); }
 
     if (permissionRolePair.length > 0) {
-      return createByFail({ code: PermissionRoleResCode.permissionRolePairExist, message: PermissionRoleResCode.permissionRolePairExist });
+      return createByFail({ code: PermissionRoleResCode.permissionRolePairExist, message: PermissionRoleResMsg.permissionRolePairExist });
     }
 
     try {

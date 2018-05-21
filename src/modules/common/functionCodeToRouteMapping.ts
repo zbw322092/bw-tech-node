@@ -11,5 +11,7 @@ functionCodeToRouteMapping.set('sign_in', '/users/sign_in');
 functionCodeToRouteMapping.set('sign_out', '/users/sign_out');
 functionCodeToRouteMapping.set('add_permission', '/permission/add_permission');
 functionCodeToRouteMapping.set('add_permission_role', '/permissionrole/add_permission_role');
+functionCodeToRouteMapping.set('add_roles_users', '/rolesusers/add_roles_users');
+functionCodeToRouteMapping.set('update_roles_users', '/rolesusers/update_roles_users');
 
 export default functionCodeToRouteMapping;
