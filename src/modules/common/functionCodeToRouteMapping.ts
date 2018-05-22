@@ -14,5 +14,6 @@ functionCodeToRouteMapping.set('add_permission_role', '/permissionrole/add_permi
 functionCodeToRouteMapping.set('add_roles_users', '/rolesusers/add_roles_users');
 functionCodeToRouteMapping.set('update_roles_users', '/rolesusers/update_roles_users');
 functionCodeToRouteMapping.set('create_post', '/posts/create_post');
+functionCodeToRouteMapping.set('add_tag', '/tags/add_tag');
 
 export default functionCodeToRouteMapping;

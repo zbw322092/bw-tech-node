@@ -4,4 +4,5 @@ export namespace IdPrefix {
   export const Post = 'post-';
   export const Permission = 'permission-'
   export const PermissionRole = 'permissionrole-'
+  export const Tags = 'tag-'
 }
