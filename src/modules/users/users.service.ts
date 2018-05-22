@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Users } from "./users.entity";
 import { Repository, getRepository, getManager } from "typeorm";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { createBySuccess, createByFail } from "../common/serverResponse/ServerResponse";
+import { createBySuccess, createByFail, createByServerError } from "../common/serverResponse/ServerResponse";
 import { isValidEmail, passwordValidator } from "../../utils/validator";
 import { errorUser } from "../common/serverResponse/Const.Error";
 import { InvitesService } from "../invites/invites.service";
@@ -29,7 +29,7 @@ enum UserResCode {
   'commonPwd' = 'USER.1004',
   'pwdSameAsEmail' = 'USER.1005',
   'unavaliableName' = 'USER.1006',
-  'incorrectCaptcha'= 'USER.1007',
+  'incorrectCaptcha' = 'USER.1007',
   'incorrectActiveToken' = 'USER.1008',
   'activeTokenExpired' = 'USER.1009',
   'emailPwdNotMatch' = 'USER.1010'
@@ -42,7 +42,7 @@ enum UserResMsg {
   'commonPwd' = 'password is easy to guess',
   'pwdSameAsEmail' = 'password must not the same as email',
   'unavaliableName' = 'name has been taken',
-  'incorrectCaptcha'= 'incorrect captcha',
+  'incorrectCaptcha' = 'incorrect captcha',
   'incorrectActiveToken' = 'incorrect activation token',
   'activeTokenExpired' = 'active token expired, please resend activtaion email',
   'emailPwdNotMatch' = 'email and password are not match'
@@ -64,7 +64,7 @@ export class UsersService {
     const { email, name, password, captcha } = signupDto;
     // check captcha
     if (session.captcha !== captcha) {
-      return createByFail({code: errorUser(UserResCode.incorrectCaptcha), message: UserResMsg.incorrectCaptcha });
+      return createByFail({ code: errorUser(UserResCode.incorrectCaptcha), message: UserResMsg.incorrectCaptcha });
     }
     delete session.captcha;
 
@@ -107,7 +107,7 @@ export class UsersService {
       const roleIdArr = await this.roleRespository.query(`SELECT id from roles WHERE name = 'visitor'`);
       roleId = roleIdArr[0].id;
     }
-    
+
     const userId: string = uniqid('user-');
 
     const saltRounds = 10;
@@ -134,7 +134,7 @@ export class UsersService {
     });
 
     // add invitation
-    const invitation = await this.invitesService.addInvitation({roleId, email, createdBy: userId});
+    const invitation = await this.invitesService.addInvitation({ roleId, email, createdBy: userId });
 
     const server = nconf.get('server');
     const url = `${server.protocol}://${server.host}`;
@@ -148,6 +148,7 @@ export class UsersService {
 
     // add userId to session
     session.userId = userId;
+    session.roleId = roleId;
 
     return createBySuccess({ message: 'Register Success', data: {} });
   }
@@ -165,13 +166,13 @@ export class UsersService {
   public async emailAvaliable(email: string): Promise<ICommonResponse<any>> {
     const count = await this.checkEmailAvaliable(email);
     return count ? createByFail({ code: errorUser(UserResCode.unavaliableEmail), message: UserResMsg.unavaliableEmail }) :
-    createBySuccess({ message: 'email avaliable', data: {} });
+      createBySuccess({ message: 'email avaliable', data: {} });
   }
 
   public async nameAvaliable(name: string): Promise<ICommonResponse<any>> {
     const count = await this.checkNameAvaliable(name);
     return count ? createByFail({ code: errorUser(UserResCode.unavaliableName), message: UserResMsg.unavaliableName }) :
-    createBySuccess({ message: 'name avaliable', data: {} });
+      createBySuccess({ message: 'name avaliable', data: {} });
   }
 
   public async activeAccount(session: any, token: string) {
@@ -210,14 +211,20 @@ export class UsersService {
     if (!pwdValidation) {
       return createByFail({ code: errorUser(UserResCode.emailPwdNotMatch), message: UserResMsg.emailPwdNotMatch });
     }
-    session.logined = true;
+
+    let rolesUsers: RolesUsers;
+    try {
+      rolesUsers = await this.rolesUsersRespository.findOne({ user_id: user.id });
+    } catch (e) { return createByServerError(); }
+
     session.userId = user.id;
+    session.roleId = rolesUsers.role_id;
     return createBySuccess({ message: 'sign in successfully', data: {} });
   }
 
   public async signOut(session: any): Promise<ICommonResponse<any>> {
-    delete session.logined;
     delete session.userId;
+    delete session.roleId;
     return createBySuccess({ message: 'sign out successfully', data: {} });
   }
 }

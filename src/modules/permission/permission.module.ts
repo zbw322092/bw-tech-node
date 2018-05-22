@@ -5,11 +5,13 @@ import { PermissionController } from "./permission.controller";
 import { PermissionService } from "./permission.service";
 import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
 import { AddPermissionDto } from "./interfaces/permission.dto";
+import { PermissionRole } from "../permissionrole/permission.role.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Permission])],
+  imports: [TypeOrmModule.forFeature([Permission, PermissionRole])],
   controllers: [PermissionController],
-  components: [PermissionService]
+  components: [PermissionService],
+  exports: [PermissionService]
 })
 export class PermissionModule implements NestModule {
   configure(consumer: MiddlewaresConsumer): void | MiddlewaresConsumer {

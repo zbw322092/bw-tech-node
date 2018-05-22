@@ -6,10 +6,12 @@ import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService
+  ) {}
 
   @Post('/create_post')
-  public createPost(@Session() session,  @Body('param') createPostDto: CreatePostDto): Promise<ICommonResponse<any>> {
+  public createPost(@Session() session,  @Body('param') createPostDto: CreatePostDto): Promise<ICommonResponse<{}>> {
     return this.postsService.createPost(session, createPostDto);
   }
 

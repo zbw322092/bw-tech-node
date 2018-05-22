@@ -1,31 +1,33 @@
-import { Length, IsInt } from "class-validator";
+import { Length, IsInt, IsEnum } from "class-validator";
+import { PostStatus } from "../../common/const/PostConst";
 
 export class CreatePostDto {
     @Length(1, 1000)
-    readonly title = '';
+    title: string = '';
 
-    readonly html = '';
+    html: string = '';
 
-    readonly plaintext = '';
+    plaintext: string = '';
 
     @Length(1, 255)
-    readonly featureImage = ''
+    featureImage: string = ''
 
     @IsInt()
-    readonly featured;
+    featured: number = 0;
 
-    @Length(1, 255)
-    readonly status = '';
+    // @Length(1, 255)
+    @IsEnum(PostStatus)
+    status: PostStatus = PostStatus.published;
 
     @Length(1, 50)
-    readonly visibility = '';
+    visibility: string = '';
 
     @Length(1, 2000)
-    readonly metaTitle = '';
+    metaTitle: string = '';
 
     @Length(1, 2000)
-    readonly metaDescription = '';
+    metaDescription: string = '';
     
     @Length(1, 2000)
-    readonly customExcerpt = '';
+    customExcerpt: string = '';
 }

@@ -13,7 +13,7 @@ export class Roles {
   description: string;
 
   @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
-  created_at?: string;
+  created_at: string;
 
   @Column({ type: 'varchar', length: 50 })
   created_by: string;
