@@ -1,4 +1,4 @@
-import { Length, IsInt, IsEnum } from "class-validator";
+import { Length, IsInt, IsEnum, IsOptional } from "class-validator";
 import { PostStatus } from "../../common/const/PostConst";
 
 export class CreatePostDto {
@@ -10,10 +10,12 @@ export class CreatePostDto {
     plaintext: string = '';
 
     @Length(1, 255)
-    featureImage: string = ''
+    @IsOptional()
+    featureImage: string | null = ''
 
     @IsInt()
-    featured: number = 0;
+    @IsOptional()
+    featured: number | null = 0;
 
     // @Length(1, 255)
     @IsEnum(PostStatus)
@@ -23,11 +25,18 @@ export class CreatePostDto {
     visibility: string = '';
 
     @Length(1, 2000)
-    metaTitle: string = '';
+    @IsOptional()
+    metaTitle: string | null = '';
 
     @Length(1, 2000)
-    metaDescription: string = '';
+    @IsOptional()
+    metaDescription: string | null = '';
     
     @Length(1, 2000)
-    customExcerpt: string = '';
+    @IsOptional()
+    customExcerpt: string | null = '';
+
+    @Length(1, 50)
+    @IsOptional()
+    tagId: string | null = '';
 }

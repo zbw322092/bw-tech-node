@@ -1,7 +1,7 @@
 import { Component } from "@nestjs/common";
 import { IPostsTagsService } from "./interfaces/IPostsTagsService";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, getRepository } from "typeorm";
 import { PostsTags } from "./poststags.entity";
 import { AddPostTagDto } from "./interfaces/poststags.dto";
 import { PermissionService } from "../permission/permission.service";
@@ -35,17 +35,31 @@ export class PostsTagsService implements IPostsTagsService {
     if (postPermission.code !== '0000') { return tagPermission; }
 
     try {
-      const checkExistence = await this.postsTagsRepository.findOne({ post_id: addPostTagDto.postId, tag_id: addPostTagDto.tagId });
-      if (checkExistence) { return createByFail({ code: PostsTagsResCode.postTagPairExisted, message: PostsTagsResMsg.postTagPairExisted }); }
-    } catch (e) { createByServerError(); }
+      const checkeExistence = await getRepository(PostsTags)
+        .createQueryBuilder()
+        .select()
+        .where('post_id = :postId', { postId: addPostTagDto.postId })
+        .andWhere(`tag_id IN ("${addPostTagDto.tagIdsArr.join('","')}")`)
+        .printSql()
+        .execute();
 
-    try {
-      await this.postsTagsRepository.insert({
+        if (checkeExistence.length) {
+          return createByFail({ code: PostsTagsResCode.postTagPairExisted, message: PostsTagsResMsg.postTagPairExisted });
+        }
+    } catch (e) { return createByServerError(); }
+
+
+    const postsTagsInstancesArr = addPostTagDto.tagIdsArr.map((tagId: string) =>  {
+      return this.postsTagsRepository.create({
         id: uniqid(IdPrefix.PostsTags),
         post_id: addPostTagDto.postId,
-        tag_id: addPostTagDto.tagId
+        tag_id: tagId
       });
-      return createBySuccess({ message: 'add post & tag pair successfully', data: {} });
-    } catch (e) { createByServerError(); }
+    });
+
+    try {
+      await this.postsTagsRepository.save(postsTagsInstancesArr);
+      return createBySuccess({ message: 'add post & tag pairs successfully', data: {} });
+    } catch (e) { return createByServerError(); }
   }
 }
