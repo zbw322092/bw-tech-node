@@ -23,8 +23,7 @@ export class Posts {
   featured: number;
 
   @Column({ type: 'varchar', length: 50, default: 'draft' })
-  // status: string;
-  status: PostStatus.published | PostStatus.draft;
+  status: string;
 
   @Column({ type: 'varchar', length: 50, default: 'public' })
   visibility: string;

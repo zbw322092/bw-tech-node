@@ -7,9 +7,11 @@ import { connectDatabase } from './db/connections/dbConnection';
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const port = nconf.get('server:port');
+import { Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule);
+
   app.useGlobalInterceptors(new HttpRequestInterceptor());
   // store session
   const sessionStore = new MySQLStore(nconf.get('expressMysqlSession'));
@@ -23,6 +25,15 @@ async function bootstrap() {
       maxAge: TimeConst.day
     }
   }));
+
+  // app.connectMicroservice({
+  //   transport: Transport.TCP,
+  //   port: 8000,
+  //   options: { retryAttempts: 5, retryDelay: 3000 },
+  // });
+
+  // await app.startAllMicroservicesAsync();
+
   await app.listen(port, () => { console.log(`App is listening on port ${port}`) });
 }
 

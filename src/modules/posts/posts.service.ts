@@ -2,7 +2,7 @@ import { Component } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "./posts.entity";
 import { Repository } from "typeorm/repository/Repository";
-import { CreatePostDto } from "./interface/posts.dto";
+import { AddPostDto, GetPostsDto } from "./interface/posts.dto";
 import { uniqid } from "../../utils/uniqid";
 import { IdPrefix } from "../common/const/IdPrefix";
 import { PermissionService } from "../permission/permission.service";
@@ -10,6 +10,7 @@ import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { PermissionConst } from "../common/const/PermissionConst";
 import { getCurrentDatetime } from "../../utils/timeHandler";
 import { createByServerError, createBySuccess } from "../common/serverResponse/ServerResponse";
+import { getManager } from "typeorm";
 
 @Component()
 export class PostsService {
@@ -23,7 +24,7 @@ export class PostsService {
     return await this.postsRepository.find();
   }
 
-  public async createPost(session: any, createPostDto: CreatePostDto): Promise<ICommonResponse<{}>> {
+  public async createPost(session: any, addPostDto: AddPostDto): Promise<ICommonResponse<{}>> {
     const permissionResult = await this.permissionService.checkPermission(session, PermissionConst.PermissionType.post, PermissionConst.ActionType.add);
     if (permissionResult.code !== '0000') {
       return permissionResult;
@@ -31,20 +32,20 @@ export class PostsService {
 
     const post = this.postsRepository.create({
       id: uniqid(IdPrefix.Post),
-      title: createPostDto.title,
-      html: createPostDto.html,
-      plaintext: createPostDto.plaintext,
-      feature_image: createPostDto.featureImage,
-      featured: createPostDto.featured,
-      status: createPostDto.status,
-      visibility: createPostDto.visibility,
-      meta_title: createPostDto.metaTitle,
-      meta_description: createPostDto.metaDescription,
+      title: addPostDto.title,
+      html: addPostDto.html,
+      plaintext: addPostDto.plaintext,
+      feature_image: addPostDto.featureImage,
+      featured: addPostDto.featured,
+      status: addPostDto.status,
+      visibility: addPostDto.visibility,
+      meta_title: addPostDto.metaTitle,
+      meta_description: addPostDto.metaDescription,
       author_id: session.userId,
       created_by: session.userId,
-      published_by: createPostDto.status === 'published' ? session.userId : null,
-      published_at: createPostDto.status === 'published' ? getCurrentDatetime() : null,
-      custom_excerpt: createPostDto.customExcerpt
+      published_by: addPostDto.status === 'published' ? session.userId : null,
+      published_at: addPostDto.status === 'published' ? getCurrentDatetime() : null,
+      custom_excerpt: addPostDto.customExcerpt
     });
 
     try {
@@ -52,4 +53,8 @@ export class PostsService {
       return createBySuccess({ message: 'add post successfully', data: {} });
     } catch (e) { return createByServerError(); }
   }
+
+  // public async getPosts(session: any, getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+
+  // }
 }
