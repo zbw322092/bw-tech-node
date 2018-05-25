@@ -4,31 +4,75 @@ import { Posts } from "./posts.entity";
 import { AddPostDto, GeneratePostsDto } from "./interface/posts.dto";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { Client, Transport, ClientProxy, MessagePattern } from "@nestjs/microservices";
-import { Observable } from "rxjs/Observable";
+import { createByFail, createBySuccess, createByServerError } from "../common/serverResponse/ServerResponse";
 
 @Controller('posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService
-  ) {}
+  ) { }
 
   @Client({ transport: Transport.TCP, port: 8000 })
   client: ClientProxy;
 
   @Post('/create_post')
-  public createPost(@Session() session,  @Body('param') addPostDto: AddPostDto): Promise<ICommonResponse<{}>> {
+  public createPost(@Session() session, @Body('param') addPostDto: AddPostDto): Promise<ICommonResponse<{}>> {
     return this.postsService.createPost(session, addPostDto);
   }
 
-  @Post('/faker_generate_post')
-  public fakerGeneratePost (@Session() session, @Body('param') generatePostDto: GeneratePostsDto): Promise<ICommonResponse<{}>> {
-    const pattern = { cmd: 'faker_generate_posts' };
-    const generatedPosts: Observable<AddPostDto[]> = this.client.send(pattern, generatePostDto);
-    generatedPosts.subscribe((postsArr: AddPostDto[]) => {
-      return postsArr.forEach((post) => {
-        return this.postsService.createPost(session, post);
-      });
-    });
+  public async asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
   }
 
+  @Post('/faker_generate_post')
+  public async fakerGeneratePost(@Session() session, @Body('param') generatePostDto: GeneratePostsDto): Promise<ICommonResponse<any>> {
+    const pattern = { cmd: 'faker_generate_posts' };
+    const generatedPosts = this.client.send<AddPostDto[]>(pattern, generatePostDto);
+
+    return generatedPosts.toPromise().then((postsArr) => {
+      let successCount: number = 0;
+      let failCount: number = 0;
+      return Promise.all(postsArr.map((post) => { return this.postsService.createPost(session, post); })).then((results) => {
+        results.forEach((value) => {
+          if (value.code === '0000') {
+            ++successCount;
+          } else { ++failCount; }
+        });
+
+        return createBySuccess({
+          data: {
+            totalCount: successCount + failCount,
+            successCount,
+            failCount
+          }
+        });
+      }).catch((e) => { return createByServerError(); });
+    });
+
+    /** Another version using await
+     * 
+     return generatedPosts.toPromise().then(async (postsArr) => {
+       let successCount: number = 0;
+       let failCount: number = 0;
+       for (let i = 0, len = postsArr.length; i < len; i++) {
+         const r = await this.postsService.createPost(session, postsArr[i]);
+         if (r.code === '0000') {
+           ++successCount;
+         } else {
+           ++failCount;
+         }
+       }
+       return createBySuccess({
+         data: {
+           totalCount: successCount + failCount,
+           successCount,
+           failCount
+         }
+       });
+ 
+     }).catch((e) => { return createByServerError(); });
+     */
+  }
 }

@@ -26,14 +26,6 @@ async function bootstrap() {
     }
   }));
 
-  // app.connectMicroservice({
-  //   transport: Transport.TCP,
-  //   port: 8000,
-  //   options: { retryAttempts: 5, retryDelay: 3000 },
-  // });
-
-  // await app.startAllMicroservicesAsync();
-
   await app.listen(port, () => { console.log(`App is listening on port ${port}`) });
 }
 
