@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Session, Body } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { Posts } from "./posts.entity";
-import { AddPostDto, GeneratePostsDto } from "./interface/posts.dto";
+import { AddPostDto, GeneratePostsDto, GetPostsDto } from "./interface/posts.dto";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { Client, Transport, ClientProxy, MessagePattern } from "@nestjs/microservices";
 import { createByFail, createBySuccess, createByServerError } from "../common/serverResponse/ServerResponse";
@@ -20,10 +20,9 @@ export class PostsController {
     return this.postsService.createPost(session, addPostDto);
   }
 
-  public async asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array)
-    }
+  @Post('/get_posts')
+  public getPosts(@Session() session, @Body('param') getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+    return this.postsService.getPosts(session, getPostsDto);
   }
 
   @Post('/faker_generate_post')

@@ -7,7 +7,7 @@ import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { PermissionService } from "../permission/permission.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PermissionConst } from "../common/const/PermissionConst";
-import { createByServerError, createByFail, createBySuccess } from "../common/serverResponse/ServerResponse";
+import { createByServerError, createByFail, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
 import { uniqid } from "../../utils/uniqid";
 import { IdPrefix } from "../common/const/IdPrefix";
 import { getCurrentDatetime } from "../../utils/timeHandler";
@@ -26,9 +26,9 @@ export class TagsService implements ITagsService {
     @InjectRepository(Tags)
     private readonly tagsRepository: Repository<Tags>,
     private readonly permissionService: PermissionService
-  ) {}
+  ) { }
 
-  public async addTag (session: any, addTagDto: AddTagDto): Promise<ICommonResponse<{}>> {
+  public async addTag(session: any, addTagDto: AddTagDto): Promise<ICommonResponse<{}>> {
     const permissionResult = await this.permissionService.checkPermission(session, PermissionConst.PermissionType.tag, PermissionConst.ActionType.add);
     if (permissionResult.code !== '0000') { return permissionResult; }
 
@@ -56,5 +56,18 @@ export class TagsService implements ITagsService {
       await this.tagsRepository.insert(tagInstance);
       return createBySuccess({ message: 'create new tag successfully', data: {} });
     } catch (e) { createByServerError(); }
+  }
+
+  public async getAllTags(session: any): Promise<ICommonResponse<{ tags: Tags[] } | {}>> {
+    if (!session.userId) {
+      // TODO: normal users can only browser tags created by themselves
+      return createByLoginRequired();
+    }
+
+    try {
+      const allTags = await this.tagsRepository.query('SELECT tags.id FROM tags');
+      return createBySuccess({ data: { tags: allTags } })
+    } catch { return createByServerError(); }
+
   }
 }

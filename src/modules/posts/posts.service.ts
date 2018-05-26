@@ -9,8 +9,9 @@ import { PermissionService } from "../permission/permission.service";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { PermissionConst } from "../common/const/PermissionConst";
 import { getCurrentDatetime } from "../../utils/timeHandler";
-import { createByServerError, createBySuccess } from "../common/serverResponse/ServerResponse";
-import { getManager } from "typeorm";
+import { createByServerError, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
+import { getManager, getRepository, Column } from "typeorm";
+import { PostFormat, PostOrder } from "../common/const/PostConst";
 
 @Component()
 export class PostsService {
@@ -18,7 +19,7 @@ export class PostsService {
     @InjectRepository(Posts)
     private readonly postsRepository: Repository<Posts>,
     private readonly permissionService: PermissionService
-  ) {}
+  ) { }
 
   public async findAll(): Promise<Posts[]> {
     return await this.postsRepository.find();
@@ -54,7 +55,23 @@ export class PostsService {
     } catch (e) { return createByServerError(); }
   }
 
-  // public async getPosts(session: any, getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+  public async getPosts(session: any, getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+    if (!session.userId) {
+      // TODO: modify permission rule
+      return createByLoginRequired();
+    }
 
-  // }
+    try {
+      const postsResults = await getRepository(Posts)
+        .createQueryBuilder('posts')
+        .select()
+        .where('posts.status = :postStatus', { postStatus: getPostsDto.filter.status })
+        .andWhere(`posts.author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`)
+        .take(getPostsDto.limit)
+        .orderBy('posts.created_at', getPostsDto.order === PostOrder.asc ? 'ASC' : 'DESC')
+        .execute();
+      return createBySuccess({ data: { posts: postsResults } });
+    } catch (e) { return createByServerError(); }
+
+  }
 }

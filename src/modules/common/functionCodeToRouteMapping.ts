@@ -20,9 +20,11 @@ functionCodeToRouteMapping.set('add_roles_users', '/rolesusers/add_roles_users')
 functionCodeToRouteMapping.set('update_roles_users', '/rolesusers/update_roles_users');
 /* ------------------------------ posts ---------------------------------- */
 functionCodeToRouteMapping.set('create_post', '/posts/create_post');
+functionCodeToRouteMapping.set('get_posts', '/posts/get_posts');
 functionCodeToRouteMapping.set('faker_generate_post', '/posts/faker_generate_post');
 /* ------------------------------ tags ---------------------------------- */
 functionCodeToRouteMapping.set('add_tag', '/tags/add_tag');
+functionCodeToRouteMapping.set('get_all_tags', '/tags/get_all_tags');
 /* ------------------------------ poststags ---------------------------------- */
 functionCodeToRouteMapping.set('add_post_tag', '/poststags/add_post_tag');
 

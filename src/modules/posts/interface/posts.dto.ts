@@ -39,17 +39,17 @@ export class AddPostDto {
 class Filter {
 	@IsOptional()
 	@IsEnum(PostStatus)
-	status: string | null = PostStatus.published;
+	status?: string | null = PostStatus.published;
 
 	@IsOptional()
 	@IsArray()
 	@MaxLength(50, { each: true })
-	authorIdsArr: string[] = [];
+	authorIdsArr?: string[] = [];
 	
 	@IsOptional()
 	@IsArray()
 	@MaxLength(50, { each: true })
-	tagIdsArr: string[] = [];
+	tagIdsArr?: string[] = [];
 }
 
 export class GetPostsDto {
@@ -60,8 +60,8 @@ export class GetPostsDto {
 	@IsInt()
 	page: number = 1;
 
-	@IsEnum(PostFormat)
-	format: string = PostFormat.html;
+	@IsArray()
+	format: Array<PostFormat> = [PostFormat.html];
 
 	@IsBoolean()
 	includeTags: boolean = false;
@@ -70,7 +70,7 @@ export class GetPostsDto {
 	order: PostOrder = PostOrder.asc;
 
 	@ValidateNested()
-	filter: Filter
+	filter: Filter = {};
 }
 
 export class GeneratePostsDto {

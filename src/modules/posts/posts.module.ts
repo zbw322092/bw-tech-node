@@ -4,7 +4,7 @@ import { Posts } from "./posts.entity";
 import { PostsController } from "./posts.controller";
 import { PostsService } from "./posts.service";
 import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
-import { AddPostDto, GeneratePostsDto } from "./interface/posts.dto";
+import { AddPostDto, GeneratePostsDto, GetPostsDto } from "./interface/posts.dto";
 import { PermissionModule } from "../permission/permission.module";
 
 @Module({
@@ -20,6 +20,10 @@ export class PostsModule implements NestModule {
 
     consumer.apply(RequestParamValidationMiddleware).with(GeneratePostsDto).forRoutes(
       { path: '/posts/faker_generate_post', method: RequestMethod.POST }
+    )
+
+    consumer.apply(RequestParamValidationMiddleware).with(GetPostsDto).forRoutes(
+      { path: '/posts/get_posts', method: RequestMethod.POST }
     )
   }
 }

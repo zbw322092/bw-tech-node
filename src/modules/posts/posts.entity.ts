@@ -5,7 +5,7 @@ import { PostStatus } from "../common/const/PostConst";
 export class Posts {
 
   @PrimaryColumn({ type: 'varchar', length: 50 })
-  id: string = '';
+  id: string;
 
   @Column({ type: 'varchar', length: 2000 })
   title: string;
