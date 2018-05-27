@@ -5,6 +5,7 @@ import { AddPostDto, GeneratePostsDto, GetPostsDto } from "./interface/posts.dto
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { Client, Transport, ClientProxy, MessagePattern } from "@nestjs/microservices";
 import { createByFail, createBySuccess, createByServerError } from "../common/serverResponse/ServerResponse";
+import { GetPostsVo } from "./interface/posts.vo";
 
 @Controller('posts')
 export class PostsController {
@@ -21,7 +22,7 @@ export class PostsController {
   }
 
   @Post('/get_posts')
-  public getPosts(@Session() session, @Body('param') getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+  public getPosts(@Session() session, @Body('param') getPostsDto: GetPostsDto): Promise<ICommonResponse<GetPostsVo | {}>> {
     return this.postsService.getPosts(session, getPostsDto);
   }
 

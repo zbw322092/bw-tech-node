@@ -61,7 +61,7 @@ export class GetPostsDto {
 	page: number = 1;
 
 	@IsArray()
-	format: Array<PostFormat> = [PostFormat.html];
+	format: Array<string> = [PostFormat.html];
 
 	@IsBoolean()
 	includeTags: boolean = false;
