@@ -10,8 +10,9 @@ import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { PermissionConst } from "../common/const/PermissionConst";
 import { getCurrentDatetime } from "../../utils/timeHandler";
 import { createByServerError, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { getManager, getRepository, Column } from "typeorm";
+import { getManager, getRepository, Column, SelectQueryBuilder } from "typeorm";
 import { PostFormat, PostOrder } from "../common/const/PostConst";
+import { PostsTags } from "../poststags/poststags.entity";
 
 @Component()
 export class PostsService {
@@ -61,16 +62,35 @@ export class PostsService {
       return createByLoginRequired();
     }
 
+    let query: SelectQueryBuilder<Posts> = getRepository(Posts)
+      .createQueryBuilder('p')
+      .select();
+
+    let postsTagsQuery: SelectQueryBuilder<PostsTags>;
+    if (getPostsDto.filter.tagIdsArr && getPostsDto.filter.tagIdsArr.length > 0) {
+      postsTagsQuery = getRepository(PostsTags).createQueryBuilder('pt')
+        .select('pt.post_id')
+        .where(`pt.tag_id IN("${getPostsDto.filter.tagIdsArr.join('","')}")`)
+    }
+
+    if (postsTagsQuery) {
+      query.where(`p.id IN (${ postsTagsQuery.getQuery() })`)
+    }
+
+    if (getPostsDto.filter.status) {
+      query = query.andWhere(`p.status = "${getPostsDto.filter.status}"`);
+    }
+    if (getPostsDto.filter.authorIdsArr && getPostsDto.filter.authorIdsArr.length > 0) {
+      query = query.andWhere(`p.author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`);
+    }
+
     try {
-      const postsResults = await getRepository(Posts)
-        .createQueryBuilder('posts')
-        .select()
-        .where('posts.status = :postStatus', { postStatus: getPostsDto.filter.status })
-        .andWhere(`posts.author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`)
+      const resultPosts = await query
+        .skip((getPostsDto.page - 1) * getPostsDto.limit)
         .take(getPostsDto.limit)
-        .orderBy('posts.created_at', getPostsDto.order === PostOrder.asc ? 'ASC' : 'DESC')
+        .orderBy('p.created_at', getPostsDto.order === PostOrder.asc ? 'ASC' : 'DESC')
         .execute();
-      return createBySuccess({ data: { posts: postsResults } });
+      return createBySuccess({ data: { posts: resultPosts } });
     } catch (e) { return createByServerError(); }
 
   }
