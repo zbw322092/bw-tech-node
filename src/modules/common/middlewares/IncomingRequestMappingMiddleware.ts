@@ -20,6 +20,8 @@ export class IncomingRequestMappingMiddleware implements NestMiddleware {
           req.url = routeMapping;
         } else { throw new ResourceNotFoundException(); }
       } else {
+        // TODO: server log
+        console.log('request protocol and functionCode required');
         throw new RequestErrorException();
       }
 

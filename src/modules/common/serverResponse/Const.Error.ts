@@ -1,3 +1,6 @@
+export const LOGINREQUIRED = 'error.login.required';
+export const COMMONSERVERERROR = 'error.server.error';
+
 export const errorRole = (customCode: string): string => {
   return `error.role.${customCode}`;
 };

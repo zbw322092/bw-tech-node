@@ -1,45 +1,68 @@
 import { Component } from "@nestjs/common";
-import { AddRolesUsersDto, UpdateRolesUsersDto } from "./dto/rolesusers.dto";
+import { AddRolesUsersDto, UpdateRolesUsersDto } from "./interfaces/rolesusers.dto";
 import { ICommonResponse } from "../common/interfaces/ICommonResponse";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RolesUsers } from './rolesusers.entity';
 import { Repository } from "typeorm";
-import { createByFail, createBySuccess } from "../common/serverResponse/ServerResponse";
+import { createByFail, createBySuccess, createByServerError, createByLoginRequired } from "../common/serverResponse/ServerResponse";
 import { errorRolesUsers } from "../common/serverResponse/Const.Error";
 import { uniqid } from "../../utils/uniqid";
 import { IdPrefix } from "../common/const/IdPrefix";
+import { IRolesUsersService } from "./interfaces/IRolesUsersService";
+
+enum RolesUsersResCode {
+  'roleUserPairExist' = 'ROLES.USERS.1001',
+}
+
+enum RolesUsersResMsg {
+  'roleUserPairExist' = 'role & user pair has exist'
+}
 
 @Component()
-export class RolesUsersService {
+export class RolesUsersService implements IRolesUsersService {
   constructor(
     @InjectRepository(RolesUsers)
     private rolesUsersRepository: Repository<RolesUsers>
   ) { }
 
-  public async addRolesUsers(addRolesUsersDto: AddRolesUsersDto): Promise<ICommonResponse<any>> {
-    const { user_id, role_id } = addRolesUsersDto;
-    const existingRecord = await this.rolesUsersRepository.findOne({ user_id });
-    if (existingRecord) {
-      return createByFail({ code: errorRolesUsers('0001'), message: 'user has been assigned role' });
+  public async addRolesUsers(session: any, addRolesUsersDto: AddRolesUsersDto): Promise<ICommonResponse<{}>> {
+    if (!session.userId) {
+      // TODO: only owner of this site can add role and user pair
+      return createByLoginRequired();
     }
-    const newRecord = this.rolesUsersRepository.create({
-      id: uniqid(IdPrefix.RolesUsers),
-      user_id, role_id
-    });
-    await this.rolesUsersRepository.save(newRecord);
 
-    return createBySuccess({ message: 'add role and user relation successfully', data: {} });
+    const { userId, roleId } = addRolesUsersDto;
+    let existingRecord: RolesUsers | null;
+    try {
+      const existingRecord = await this.rolesUsersRepository.findOne({ user_id: userId });
+      if (existingRecord) {
+        return createByFail({ code: RolesUsersResCode.roleUserPairExist, message: RolesUsersResMsg.roleUserPairExist });
+      }
+    } catch (e) { return createByServerError(); }
+
+
+    try {
+      await this.rolesUsersRepository.insert({
+        id: uniqid(IdPrefix.RolesUsers),
+        user_id: userId,
+        role_id: roleId
+      });
+      return createBySuccess({ message: 'add role and user relation successfully', data: {} });
+    } catch (e) { return createByServerError(); }
+
   }
 
-  public async updateRolesUsers(updateRolesUsersDto: UpdateRolesUsersDto): Promise<ICommonResponse<any>> {
-    const { user_id, role_id } = updateRolesUsersDto;
-    const existingRecord = await this.rolesUsersRepository.findOne({ user_id });
-    if (!existingRecord) {
-      return createByFail({ code: errorRolesUsers('0002'), message: 'no such user-role relation record' });
+  public async updateRolesUsers(session: any, updateRolesUsersDto: UpdateRolesUsersDto): Promise<ICommonResponse<{}>> {
+    if (!session.userId) {
+      // TODO: only owner of this site can add role and user pair
+      return createByLoginRequired();
     }
 
-    // TODO
-    // await this.rolesUsersRepository.update({}, { user_id, role_id });
-    // return createBySuccess({ data: {} });
+    const { id, roleId } = updateRolesUsersDto;
+
+    try {
+      await this.rolesUsersRepository.update({ id }, { role_id: roleId });
+      return createBySuccess({ message: 'update role & user relation successfully', data: {} });
+    } catch (e) { return createByServerError(); }
   }
 }

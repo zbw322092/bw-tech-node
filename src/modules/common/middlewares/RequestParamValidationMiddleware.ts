@@ -21,6 +21,8 @@ export class RequestParamValidationMiddleware implements NestMiddleware {
       const errors = validator.validateSync(requestParam);
 
       if (errors.length > 0) {
+        // TODO server log
+        console.log('request param invalid');
         throw new RequestErrorException();
       }
       
