@@ -13,18 +13,17 @@ import { createByServerError, createBySuccess, createByLoginRequired } from "../
 import { getManager, getRepository, Column, SelectQueryBuilder } from "typeorm";
 import { PostFormat, PostOrder } from "../common/const/PostConst";
 import { PostsTags } from "../poststags/poststags.entity";
+import { Tags } from "../tags/tags.entity";
+import { GetPostsVo, TagsInfo, PostsInfo } from "./interface/posts.vo";
+import { IPostsSerrvice } from "./interface/IPostsSerrvice";
 
 @Component()
-export class PostsService {
+export class PostsService implements IPostsSerrvice {
   constructor(
     @InjectRepository(Posts)
     private readonly postsRepository: Repository<Posts>,
     private readonly permissionService: PermissionService
   ) { }
-
-  public async findAll(): Promise<Posts[]> {
-    return await this.postsRepository.find();
-  }
 
   public async createPost(session: any, addPostDto: AddPostDto): Promise<ICommonResponse<{}>> {
     const permissionResult = await this.permissionService.checkPermission(session, PermissionConst.PermissionType.post, PermissionConst.ActionType.add);
@@ -56,15 +55,22 @@ export class PostsService {
     } catch (e) { return createByServerError(); }
   }
 
-  public async getPosts(session: any, getPostsDto: GetPostsDto): Promise<ICommonResponse<any>> {
+  public async getPosts(session: any, getPostsDto: GetPostsDto): Promise<ICommonResponse<GetPostsVo | {}>> {
     if (!session.userId) {
       // TODO: modify permission rule
       return createByLoginRequired();
     }
 
+    // start build query
     let query: SelectQueryBuilder<Posts> = getRepository(Posts)
-      .createQueryBuilder('p')
-      .select();
+      .createQueryBuilder()
+      .select(`posts.id, posts.title,
+        ${getPostsDto.format.includes('plaintext') ? 'posts.plaintext,' : ''}
+        ${getPostsDto.format.includes('html') ? 'posts.html,' : ''}
+        posts.feature_image, posts.featured, posts.status, posts.meta_title,
+        posts.meta_description, posts.author_id, posts.created_at, posts.created_by,
+        posts.updated_at, posts.updated_by, posts.published_at, posts.published_by, posts.custom_excerpt
+      `);
 
     let postsTagsQuery: SelectQueryBuilder<PostsTags>;
     if (getPostsDto.filter.tagIdsArr && getPostsDto.filter.tagIdsArr.length > 0) {
@@ -74,24 +80,39 @@ export class PostsService {
     }
 
     if (postsTagsQuery) {
-      query.where(`p.id IN (${ postsTagsQuery.getQuery() })`)
+      query.where(`id IN (${postsTagsQuery.getQuery()})`)
     }
 
     if (getPostsDto.filter.status) {
-      query = query.andWhere(`p.status = "${getPostsDto.filter.status}"`);
+      query = query.andWhere(`status = "${getPostsDto.filter.status}"`);
     }
     if (getPostsDto.filter.authorIdsArr && getPostsDto.filter.authorIdsArr.length > 0) {
-      query = query.andWhere(`p.author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`);
+      query = query.andWhere(`author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`);
     }
 
+    let resultPosts: Array<PostsInfo>;
     try {
-      const resultPosts = await query
+      resultPosts = await query
         .skip((getPostsDto.page - 1) * getPostsDto.limit)
         .take(getPostsDto.limit)
-        .orderBy('p.created_at', getPostsDto.order === PostOrder.asc ? 'ASC' : 'DESC')
+        .orderBy('created_at', getPostsDto.order === PostOrder.asc ? 'ASC' : 'DESC')
         .execute();
-      return createBySuccess({ data: { posts: resultPosts } });
     } catch (e) { return createByServerError(); }
+
+    const getTagsQueryArr = resultPosts.map((post: PostsInfo) => {
+      return getRepository(PostsTags)
+        .createQueryBuilder('pt')
+        .select('pt.tag_id AS tag_id, tg.name AS tag_name')
+        .innerJoin(Tags, 'tg', 'pt.tag_id = tg.id')
+        .where(`pt.post_id = "${post.id}"`);
+    });
+
+    return Promise.all(getTagsQueryArr.map((query) => { return query.execute(); })).then((tagsResults: Array<Array<TagsInfo>>) => {
+      resultPosts.forEach((post, index) => {
+        post.tagsInfo = tagsResults[index];
+      });
+      return createBySuccess({ data: { posts: resultPosts } });
+    }).catch((e) => { return createByServerError(); })
 
   }
 }
