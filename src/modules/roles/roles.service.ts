@@ -1,13 +1,13 @@
-import { Component } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Component } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Roles } from './roles.entity';
-import { Repository } from "typeorm";
-import { AddRoleDto, UpdateRoleDto } from "./dto/roles.dto";
-import { uniqid } from "../../utils/uniqid";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { createByFail, createBySuccess } from "../common/serverResponse/ServerResponse";
-import { errorRole } from "../common/serverResponse/Const.Error";
-import { getCurrentDatetime } from "../../utils/timeHandler";
+import { Repository } from 'typeorm';
+import { AddRoleDto, UpdateRoleDto } from './dto/roles.dto';
+import { uniqid } from '../../utils/uniqid';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { createByFail, createBySuccess } from '../common/serverResponse/ServerResponse';
+import { errorRole } from '../common/serverResponse/Const.Error';
+import { getCurrentDatetime } from '../../utils/timeHandler';
 
 @Component()
 export class RolesService {
@@ -15,7 +15,6 @@ export class RolesService {
     @InjectRepository(Roles)
     private readonly rolesRepository: Repository<Roles>
   ) { }
-
 
   private async getRoleByName(name: string): Promise<Roles> {
     return await this.rolesRepository.findOne({ name });
@@ -54,9 +53,9 @@ export class RolesService {
       return createByFail({ code: errorRole('0002'), message: 'no such role' });
     }
     const sameNameRole = await this.rolesRepository
-      .createQueryBuilder("role")
+      .createQueryBuilder('role')
       .select()
-      .where("role.name = :name AND role.id != :id", { name, id })
+      .where('role.name = :name AND role.id != :id', { name, id })
       .getOne();
     if (sameNameRole) {
       return createByFail({ code: errorRole('0003'), message: 'role name has been taken, cannot duplicate.' });

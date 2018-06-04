@@ -1,7 +1,7 @@
-import { Controller, Post, Body, Get, Session } from "@nestjs/common";
-import { SignupDto, EmailAvaliableDto, NameAvaliableDto, ActiveAccountDto, SigninDto } from "./dto/users.dto";
-import { UsersService } from "./users.service";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
+import { Controller, Post, Body, Get, Session } from '@nestjs/common';
+import { SignupDto, EmailAvaliableDto, NameAvaliableDto, ActiveAccountDto, SigninDto } from './dto/users.dto';
+import { UsersService } from './users.service';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
 
 @Controller('users')
 export class UsersController {

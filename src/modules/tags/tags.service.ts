@@ -1,16 +1,16 @@
-import { Component } from "@nestjs/common";
-import { ITagsService } from "./interfaces/ITagsService";
-import { Repository } from "typeorm";
-import { Tags } from "./tags.entity";
-import { AddTagDto } from "./interfaces/tags.dto";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { PermissionService } from "../permission/permission.service";
-import { InjectRepository } from "@nestjs/typeorm";
-import { PermissionConst } from "../common/const/PermissionConst";
-import { createByServerError, createByFail, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { getCurrentDatetime } from "../../utils/timeHandler";
+import { Component } from '@nestjs/common';
+import { ITagsService } from './interfaces/ITagsService';
+import { Repository } from 'typeorm';
+import { Tags } from './tags.entity';
+import { AddTagDto } from './interfaces/tags.dto';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { PermissionService } from '../permission/permission.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionConst } from '../common/const/PermissionConst';
+import { createByServerError, createByFail, createBySuccess, createByLoginRequired } from '../common/serverResponse/ServerResponse';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { getCurrentDatetime } from '../../utils/timeHandler';
 
 enum TagsResCode {
   'DuplicatedTagName' = 'TAGS.1001'
@@ -66,7 +66,7 @@ export class TagsService implements ITagsService {
 
     try {
       const allTags = await this.tagsRepository.query('SELECT tags.id FROM tags');
-      return createBySuccess({ data: { tags: allTags } })
+      return createBySuccess({ data: { tags: allTags } });
     } catch { return createByServerError(); }
 
   }

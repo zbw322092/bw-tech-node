@@ -1,9 +1,9 @@
 import { Passport } from 'passport';
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { Strategy as LocalStrategy } from 'passport-local'
-import { secretOrKey } from "./common";
-import { Users } from "../modules/users/users.entity";
-import { getConnection } from "typeorm";
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { secretOrKey } from './common';
+import { Users } from '../modules/users/users.entity';
+import { getConnection } from 'typeorm';
 
 const entityManager = getConnection().manager;
 
@@ -19,7 +19,7 @@ const localAuth = new LocalStrategy(localOptions, async (username, password, don
 
 // jwt auth
 const jwtOptions = {
-  secretOrKey: secretOrKey,
+  secretOrKey,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 

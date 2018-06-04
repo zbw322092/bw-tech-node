@@ -5,60 +5,60 @@ import { IsEmail } from 'class-validator';
 export class Users {
 
   @PrimaryColumn({ type: 'varchar', length: 50 })
-  id: string;
+  public id: string;
 
   @Column({ type: 'varchar', length: 191, default: null })
-  name: string | null;
+  public name: string | null;
 
   @Column({ type: 'varchar', length: 60 })
-  password: string;
+  public password: string;
 
   @Column({ type: 'varchar', length: 191 })
   @IsEmail()
-  email: string;
+  public email: string;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  profile_image: string|null;
+  public profile_image: string|null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  cover_image: string|null;
+  public cover_image: string|null;
 
   @Column({ type: 'text', default: null })
-  bio: string|null;
+  public bio: string|null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  website: string|null;
+  public website: string|null;
 
   @Column({ type: 'text', default: null })
-  location: string|null;
+  public location: string|null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  facebook: string|null;
+  public facebook: string|null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  twitter: string|null;
+  public twitter: string|null;
 
   @Column({ type: 'varchar', length: 50, default: 'active'})
-  status: string;
+  public status: string;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  meta_title: string | null;
+  public meta_title: string | null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  meta_description: string | null;
+  public meta_description: string | null;
 
   @Column({ type: 'datetime', default: null })
-  last_seen: string|null;
+  public last_seen: string|null;
 
-  @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
-  created_at: string;
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  public created_at: string;
 
   @Column({ type: 'varchar', length: 50 })
-  created_by: string;
+  public created_by: string;
 
   @Column({ type: 'datetime', default: null })
-  updated_at: string|null;
+  public updated_at: string|null;
 
   @Column({ type: 'varchar', length: 50, default: null })
-  updated_by: string|null;
+  public updated_by: string|null;
 }

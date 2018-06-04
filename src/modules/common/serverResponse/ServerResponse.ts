@@ -1,5 +1,5 @@
-import { ICommonResponse } from "../interfaces/ICommonResponse";
-import { COMMONSERVERERROR, LOGINREQUIRED } from "./Const.Error";
+import { ICommonResponse } from '../interfaces/ICommonResponse';
+import { COMMONSERVERERROR, LOGINREQUIRED } from './Const.Error';
 
 /**
  * - `code` - response code.

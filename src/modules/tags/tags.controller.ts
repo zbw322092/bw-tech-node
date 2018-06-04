@@ -1,8 +1,8 @@
-import { Controller, Session, Body, Post } from "@nestjs/common";
-import { TagsService } from "./tags.service";
-import { AddTagDto } from "./interfaces/tags.dto";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { Tags } from "./tags.entity";
+import { Controller, Session, Body, Post } from '@nestjs/common';
+import { TagsService } from './tags.service';
+import { AddTagDto } from './interfaces/tags.dto';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { Tags } from './tags.entity';
 
 @Controller('/tags')
 export class TagsController {

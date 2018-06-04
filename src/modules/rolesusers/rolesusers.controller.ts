@@ -1,7 +1,7 @@
-import { Controller, Post, Session, Body } from "@nestjs/common";
-import { AddRolesUsersDto, UpdateRolesUsersDto } from "./interfaces/rolesusers.dto";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { RolesUsersService } from "./rolesusers.service";
+import { Controller, Post, Session, Body } from '@nestjs/common';
+import { AddRolesUsersDto, UpdateRolesUsersDto } from './interfaces/rolesusers.dto';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { RolesUsersService } from './rolesusers.service';
 
 @Controller('rolesusers')
 export class RolesUsersController {

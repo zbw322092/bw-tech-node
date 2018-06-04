@@ -1,8 +1,8 @@
-import { Controller, Post, Session, Body } from "@nestjs/common";
-import { AddPermissionDto } from "./interfaces/permission.dto";
-import { createByFail } from "../common/serverResponse/ServerResponse";
-import { PermissionService } from "./permission.service";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
+import { Controller, Post, Session, Body } from '@nestjs/common';
+import { AddPermissionDto } from './interfaces/permission.dto';
+import { createByFail } from '../common/serverResponse/ServerResponse';
+import { PermissionService } from './permission.service';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
 
 @Controller('permission')
 export class PermissionController {

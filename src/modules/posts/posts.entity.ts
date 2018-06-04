@@ -1,60 +1,60 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
-import { PostStatus } from "../common/const/PostConst";
+import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { PostStatus } from '../common/const/PostConst';
 
 @Entity()
 export class Posts {
 
   @PrimaryColumn({ type: 'varchar', length: 50 })
-  id: string;
+  public id: string;
 
   @Column({ type: 'varchar', length: 2000 })
-  title: string;
+  public title: string;
 
   @Column({ type: 'text', default: null })
-  html: string | null;
+  public html: string | null;
 
   @Column({ type: 'text', default: null })
-  plaintext: string | null;
+  public plaintext: string | null;
 
   @Column({ type: 'varchar', default: null })
-  feature_image: string | null;
+  public feature_image: string | null;
 
   @Column({ type: 'tinyint', default: 0 })
-  featured: number;
+  public featured: number;
 
   @Column({ type: 'varchar', length: 50, default: 'draft' })
-  status: string;
+  public status: string;
 
   @Column({ type: 'varchar', length: 50, default: 'public' })
-  visibility: string;
+  public visibility: string;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  meta_title: string | null;
+  public meta_title: string | null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  meta_description: string | null;
+  public meta_description: string | null;
 
   @Column({ type: 'varchar', length: 50 })
-  author_id: string;
+  public author_id: string;
 
-  @Column({ type: 'datetime', default: () => "CURRENT_TIMESTAMP" })
-  created_at: string;
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  public created_at: string;
 
   @Column({ type: 'varchar', length: 50 })
-  created_by: string;
+  public created_by: string;
 
   @Column({ type: 'datetime', default: null })
-  updated_at: string | null;
+  public updated_at: string | null;
 
   @Column({ type: 'varchar', length: 50, default: null })
-  updated_by: string | null;
+  public updated_by: string | null;
 
   @Column({ type: 'datetime', default: null })
-  published_at: string | null;
+  public published_at: string | null;
 
   @Column({ type: 'varchar', length: 50, default: null })
-  published_by: string | null;
+  public published_by: string | null;
 
   @Column({ type: 'varchar', length: 2000, default: null })
-  custom_excerpt: string | null;
+  public custom_excerpt: string | null;
 }

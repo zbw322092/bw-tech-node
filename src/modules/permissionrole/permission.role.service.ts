@@ -1,14 +1,14 @@
-import { Component } from "@nestjs/common";
-import { AddPermissionRoleDto } from "./interfaces/permissionrole.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { PermissionRole } from "./permission.role.entity";
-import { Repository } from "typeorm";
-import { Trycatch } from "../../lib/decorators/trycatch";
-import { createByFail, createByServerError, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { IPermissionRoleService } from "./interfaces/IPermissionRoleService";
+import { Component } from '@nestjs/common';
+import { AddPermissionRoleDto } from './interfaces/permissionrole.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionRole } from './permission.role.entity';
+import { Repository } from 'typeorm';
+import { Trycatch } from '../../lib/decorators/trycatch';
+import { createByFail, createByServerError, createBySuccess, createByLoginRequired } from '../common/serverResponse/ServerResponse';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { IPermissionRoleService } from './interfaces/IPermissionRoleService';
 
 enum PermissionRoleResCode {
   'permissionRolePairExist' = 'PERMISSION.ROLE.1001',

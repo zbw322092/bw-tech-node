@@ -1,10 +1,10 @@
-import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { Roles } from "./roles.entity";
-import { RolesService } from "./roles.service";
-import { RoleController } from "./roles.controller";
-import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
-import { UpdateRoleDto, AddRoleDto } from "./dto/roles.dto";
+import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Roles } from './roles.entity';
+import { RolesService } from './roles.service';
+import { RoleController } from './roles.controller';
+import { RequestParamValidationMiddleware } from '../common/middlewares/RequestParamValidationMiddleware';
+import { UpdateRoleDto, AddRoleDto } from './dto/roles.dto';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Roles])],
@@ -13,7 +13,7 @@ import { UpdateRoleDto, AddRoleDto } from "./dto/roles.dto";
   exports: [RolesService]
 })
 export class RolesModule implements NestModule {
-  configure(consumer: MiddlewaresConsumer): void {
+  public configure(consumer: MiddlewaresConsumer): void {
     consumer.apply(RequestParamValidationMiddleware).with(AddRoleDto).forRoutes(
       { path: '/roles/add_role', method: RequestMethod.POST }
     );

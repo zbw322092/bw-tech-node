@@ -1,14 +1,14 @@
-import { Component } from "@nestjs/common";
-import { AddRolesUsersDto, UpdateRolesUsersDto } from "./interfaces/rolesusers.dto";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Component } from '@nestjs/common';
+import { AddRolesUsersDto, UpdateRolesUsersDto } from './interfaces/rolesusers.dto';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { InjectRepository } from '@nestjs/typeorm';
 import { RolesUsers } from './rolesusers.entity';
-import { Repository } from "typeorm";
-import { createByFail, createBySuccess, createByServerError, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { errorRolesUsers } from "../common/serverResponse/Const.Error";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { IRolesUsersService } from "./interfaces/IRolesUsersService";
+import { Repository } from 'typeorm';
+import { createByFail, createBySuccess, createByServerError, createByLoginRequired } from '../common/serverResponse/ServerResponse';
+import { errorRolesUsers } from '../common/serverResponse/Const.Error';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { IRolesUsersService } from './interfaces/IRolesUsersService';
 
 enum RolesUsersResCode {
   'roleUserPairExist' = 'ROLES.USERS.1001',
@@ -34,12 +34,11 @@ export class RolesUsersService implements IRolesUsersService {
     const { userId, roleId } = addRolesUsersDto;
     let existingRecord: RolesUsers | null;
     try {
-      const existingRecord = await this.rolesUsersRepository.findOne({ user_id: userId });
+      existingRecord = await this.rolesUsersRepository.findOne({ user_id: userId });
       if (existingRecord) {
         return createByFail({ code: RolesUsersResCode.roleUserPairExist, message: RolesUsersResMsg.roleUserPairExist });
       }
     } catch (e) { return createByServerError(); }
-
 
     try {
       await this.rolesUsersRepository.insert({

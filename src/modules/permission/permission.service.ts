@@ -1,15 +1,15 @@
-import { Component } from "@nestjs/common";
-import { AddPermissionDto } from "./interfaces/permission.dto";
-import { createByFail, createBySuccess, createByServerError, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { LOGINREQUIRED, COMMONSERVERERROR } from "../common/serverResponse/Const.Error";
-import { Permission } from "./permission.entity";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { IPermissionService } from "./interfaces/IPermissionService";
-import { PermissionRole } from "../permissionrole/permission.role.entity";
+import { Component } from '@nestjs/common';
+import { AddPermissionDto } from './interfaces/permission.dto';
+import { createByFail, createBySuccess, createByServerError, createByLoginRequired } from '../common/serverResponse/ServerResponse';
+import { LOGINREQUIRED, COMMONSERVERERROR } from '../common/serverResponse/Const.Error';
+import { Permission } from './permission.entity';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { IPermissionService } from './interfaces/IPermissionService';
+import { PermissionRole } from '../permissionrole/permission.role.entity';
 
 enum PermissionResCode {
   'noMatchedPermission' = 'PERMISSION.1001',
@@ -59,11 +59,11 @@ export class PermissionService implements IPermissionService {
     } catch (e) { return createByServerError(); }
 
     try {
-      let permissionRolePair = await this.PermissionRoleRepository.findOne({ permission_id: permission.id, role_id: session.roleId });
+      const permissionRolePair = await this.PermissionRoleRepository.findOne({ permission_id: permission.id, role_id: session.roleId });
       if (permissionRolePair) {
         return createBySuccess({ message: 'permitted', data: {} });
       } else {
-        return createByFail({ code: PermissionResCode.notPermittedByThisRole, message: PermissionResMsg.notPermittedByThisRole })
+        return createByFail({ code: PermissionResCode.notPermittedByThisRole, message: PermissionResMsg.notPermittedByThisRole });
       }
     } catch (e) { return createByServerError(); }
   }

@@ -1,5 +1,5 @@
-import { Controller, Get, Req, Res, Post } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Controller, Get, Req, Res, Post } from '@nestjs/common';
+import { Request, Response } from 'express';
 const svgCaptcha = require('svg-captcha');
 
 @Controller('/captcha')

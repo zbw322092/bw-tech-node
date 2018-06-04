@@ -1,21 +1,21 @@
-import { Component } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Posts } from "./posts.entity";
-import { Repository } from "typeorm/repository/Repository";
-import { AddPostDto, GetPostsDto } from "./interface/posts.dto";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { PermissionService } from "../permission/permission.service";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { PermissionConst } from "../common/const/PermissionConst";
-import { getCurrentDatetime } from "../../utils/timeHandler";
-import { createByServerError, createBySuccess, createByLoginRequired } from "../common/serverResponse/ServerResponse";
-import { getManager, getRepository, Column, SelectQueryBuilder } from "typeorm";
-import { PostFormat, PostOrder } from "../common/const/PostConst";
-import { PostsTags } from "../poststags/poststags.entity";
-import { Tags } from "../tags/tags.entity";
-import { GetPostsVo, TagsInfo, PostsInfo } from "./interface/posts.vo";
-import { IPostsSerrvice } from "./interface/IPostsSerrvice";
+import { Component } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Posts } from './posts.entity';
+import { Repository } from 'typeorm/repository/Repository';
+import { AddPostDto, GetPostsDto } from './interface/posts.dto';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { PermissionService } from '../permission/permission.service';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { PermissionConst } from '../common/const/PermissionConst';
+import { getCurrentDatetime } from '../../utils/timeHandler';
+import { createByServerError, createBySuccess, createByLoginRequired } from '../common/serverResponse/ServerResponse';
+import { getManager, getRepository, Column, SelectQueryBuilder } from 'typeorm';
+import { PostFormat, PostOrder } from '../common/const/PostConst';
+import { PostsTags } from '../poststags/poststags.entity';
+import { Tags } from '../tags/tags.entity';
+import { GetPostsVo, TagsInfo, PostsInfo } from './interface/posts.vo';
+import { IPostsSerrvice } from './interface/IPostsSerrvice';
 
 @Component()
 export class PostsService implements IPostsSerrvice {
@@ -76,11 +76,11 @@ export class PostsService implements IPostsSerrvice {
     if (getPostsDto.filter.tagIdsArr && getPostsDto.filter.tagIdsArr.length > 0) {
       postsTagsQuery = getRepository(PostsTags).createQueryBuilder('pt')
         .select('pt.post_id')
-        .where(`pt.tag_id IN("${getPostsDto.filter.tagIdsArr.join('","')}")`)
+        .where(`pt.tag_id IN("${getPostsDto.filter.tagIdsArr.join('","')}")`);
     }
 
     if (postsTagsQuery) {
-      query.where(`id IN (${postsTagsQuery.getQuery()})`)
+      query.where(`id IN (${postsTagsQuery.getQuery()})`);
     }
 
     if (getPostsDto.filter.status) {
@@ -90,7 +90,7 @@ export class PostsService implements IPostsSerrvice {
       query = query.andWhere(`author_id IN ("${getPostsDto.filter.authorIdsArr.join('","')}")`);
     }
 
-    let resultPosts: Array<PostsInfo>;
+    let resultPosts: PostsInfo[];
     try {
       resultPosts = await query
         .skip((getPostsDto.page - 1) * getPostsDto.limit)
@@ -107,12 +107,12 @@ export class PostsService implements IPostsSerrvice {
         .where(`pt.post_id = "${post.id}"`);
     });
 
-    return Promise.all(getTagsQueryArr.map((query) => { return query.execute(); })).then((tagsResults: Array<Array<TagsInfo>>) => {
+    return Promise.all(getTagsQueryArr.map((tagQuery) => tagQuery.execute() )).then((tagsResults: TagsInfo[][]) => {
       resultPosts.forEach((post, index) => {
         post.tagsInfo = tagsResults[index];
       });
       return createBySuccess({ data: { posts: resultPosts } });
-    }).catch((e) => { return createByServerError(); })
+    }).catch((e) => createByServerError() );
 
   }
 }

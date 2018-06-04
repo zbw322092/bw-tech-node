@@ -4,16 +4,16 @@
  */
 
 import { deserialize } from 'json-typescript-mapper';
-import { Validator } from "class-validator";
-import { RequestHandler, Request, Response, NextFunction } from "express";
+import { Validator } from 'class-validator';
+import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { RequestErrorException } from '../exceptions/exceptions';
 import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
 
-type Constructor<T> = { new(): T };
+// type Constructor<T> = { new(): T };
 
 @Middleware()
 export class RequestParamValidationMiddleware implements NestMiddleware {
-  resolve(dto: any): ExpressMiddleware {
+  public resolve(dto: any): ExpressMiddleware {
     return (req: Request, res: Response, next: NextFunction) => {
       const validator = new Validator();
       const param = req.body.param || {};
@@ -25,9 +25,9 @@ export class RequestParamValidationMiddleware implements NestMiddleware {
         console.log('request param invalid');
         throw new RequestErrorException();
       }
-      
+
       req.body.param = requestParam;
       next();
-    }
+    };
   }
 }

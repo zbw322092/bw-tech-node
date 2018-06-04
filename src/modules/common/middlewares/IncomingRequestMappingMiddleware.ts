@@ -1,8 +1,8 @@
-import { Middleware, NestMiddleware, ExpressMiddleware } from "@nestjs/common";
-import { RequestBodyDto } from "../dto/RequestBodyDto";
+import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
+import { RequestBodyDto } from '../dto/RequestBodyDto';
 import functionCodeToRouteMapping from '../functionCodeToRouteMapping';
-import { Response, Request, NextFunction } from "express";
-import { RequestErrorException, ResourceNotFoundException } from "../exceptions/exceptions";
+import { Response, Request, NextFunction } from 'express';
+import { RequestErrorException, ResourceNotFoundException } from '../exceptions/exceptions';
 
 @Middleware()
 export class IncomingRequestMappingMiddleware implements NestMiddleware {
@@ -26,6 +26,6 @@ export class IncomingRequestMappingMiddleware implements NestMiddleware {
       }
 
       next();
-    }
+    };
   }
 }

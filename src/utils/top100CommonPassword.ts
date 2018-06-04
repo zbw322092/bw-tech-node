@@ -4,7 +4,7 @@
  * Reference: https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10-million-password-list-top-100.txt
  */
 
-export const commonPasswords: Array<string> = [
+export const commonPasswords: string[] = [
   '123456',
   'password',
   '12345678',

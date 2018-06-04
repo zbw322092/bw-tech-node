@@ -1,29 +1,29 @@
 export class TagsInfo {
-  tag_id: string;
-  tag_name: string;
+  public tag_id: string;
+  public tag_name: string;
 }
 
 export class PostsInfo {
-  id: string;
-  title: string;
-  html: string;
-  plaintext: string;
-  feature_image: string | null;
-  featured: number;
-  status: string;
-  meta_title: string | null;
-  meta_description: string | null;
-  author_id: string;
-  created_at: string;
-  created_by: string;
-  updated_at: string | null;
-  updated_by: string | null;
-  published_at: string | null;
-  published_by: string | null;
-  custom_excerpt: string | null;
-  tagsInfo?: Array<TagsInfo>;
+  public id: string;
+  public title: string;
+  public html: string;
+  public plaintext: string;
+  public feature_image: string | null;
+  public featured: number;
+  public status: string;
+  public meta_title: string | null;
+  public meta_description: string | null;
+  public author_id: string;
+  public created_at: string;
+  public created_by: string;
+  public updated_at: string | null;
+  public updated_by: string | null;
+  public published_at: string | null;
+  public published_by: string | null;
+  public custom_excerpt: string | null;
+  public tagsInfo?: TagsInfo[];
 }
 
 export class GetPostsVo {
-  posts: Array<PostsInfo>
+  public posts: PostsInfo[];
 }

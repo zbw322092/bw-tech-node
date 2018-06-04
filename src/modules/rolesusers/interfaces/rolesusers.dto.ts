@@ -1,17 +1,17 @@
-import { Length } from "class-validator";
+import { Length } from 'class-validator';
 
 export class AddRolesUsersDto {
   @Length(1, 50)
-  roleId: string = '';
+  public roleId: string = '';
 
-  @Length(1,50)
-  userId: string = '';
+  @Length(1, 50)
+  public userId: string = '';
 }
 
 export class UpdateRolesUsersDto {
   @Length(1, 50)
-  id: string = '';
+  public id: string = '';
 
-  @Length(1,50)
-  roleId: string = '';
+  @Length(1, 50)
+  public roleId: string = '';
 }

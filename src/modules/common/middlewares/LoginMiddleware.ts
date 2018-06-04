@@ -1,7 +1,7 @@
-import { Middleware, NestMiddleware, ExpressMiddleware } from "@nestjs/common";
-import { Request, Response, NextFunction } from "express";
-import { createByFail } from "../serverResponse/ServerResponse";
-import { errorAuth } from "../serverResponse/Const.Error";
+import { Middleware, NestMiddleware, ExpressMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { createByFail } from '../serverResponse/ServerResponse';
+import { errorAuth } from '../serverResponse/Const.Error';
 
 @Middleware()
 export class LoginMiddleware implements NestMiddleware {

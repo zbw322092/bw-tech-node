@@ -1,15 +1,15 @@
-import { Component } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Invites } from "./invites.entity";
-import { Repository } from "typeorm";
-import { AddInvitationDto, UpdateStatusDto } from "./dto/invites.dto";
+import { Component } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Invites } from './invites.entity';
+import { Repository } from 'typeorm';
+import { AddInvitationDto, UpdateStatusDto } from './dto/invites.dto';
 import * as crypto from 'crypto';
-import { TimeConst } from "../common/const/TimeConst";
-import { uniqid } from "../../utils/uniqid";
-import { IdPrefix } from "../common/const/IdPrefix";
-import { Roles } from "../roles/roles.entity";
-import { RequestErrorException } from "../common/exceptions/exceptions";
-import { getCurrentDatetime } from "../../utils/timeHandler";
+import { TimeConst } from '../common/const/TimeConst';
+import { uniqid } from '../../utils/uniqid';
+import { IdPrefix } from '../common/const/IdPrefix';
+import { Roles } from '../roles/roles.entity';
+import { RequestErrorException } from '../common/exceptions/exceptions';
+import { getCurrentDatetime } from '../../utils/timeHandler';
 
 @Component()
 export class InvitesService {

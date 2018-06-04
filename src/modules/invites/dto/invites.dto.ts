@@ -1,25 +1,25 @@
-import { Length, IsEmail, IsIn } from "class-validator";
+import { Length, IsEmail, IsIn } from 'class-validator';
 
 export class AddInvitationDto {
   @Length(1, 50)
-  roleId: string = '';
+  public roleId: string = '';
 
   @Length(5, 191)
   @IsEmail()
-  email: string = '';
+  public email: string = '';
 
   @Length(1, 50)
-  createdBy: string = '';
+  public createdBy: string = '';
 }
 
 type StatusType = 'pending' | 'sent' |'accepted';
 export class UpdateStatusDto {
-  token: string = '';
+  public token: string = '';
 
-  @Length(1,50)
+  @Length(1, 50)
   @IsIn(['pending', 'sent', 'accepted'])
-  status: StatusType;
+  public status: StatusType;
 
-  @Length(1,50)
-  updatedBy: string;
+  @Length(1, 50)
+  public updatedBy: string;
 }

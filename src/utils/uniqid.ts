@@ -10,7 +10,7 @@
 // ================================================
 const pid = process && process.pid ? process.pid.toString(36) : '';
 const mac = require('macaddress').one(macHandler);
-const address = mac ? parseInt(mac.replace(/\:|\D+/gi, '')).toString(36) : '';
+const address = mac ? parseInt(mac.replace(/\:|\D+/gi, ''), 10).toString(36) : '';
 
 //  Exports
 // ================================================
@@ -28,7 +28,7 @@ function now(): number {
 
 function macHandler(error): void {
   if (module.parent && (module.parent as any).uniqid_debug) {
-    if (error) console.error('Info: No mac address - uniqid() falls back to uniqid.process().', error)
-    if (pid == '') console.error('Info: No process.pid - uniqid.process() falls back to uniqid.time().')
+    if (error) { console.error('Info: No mac address - uniqid() falls back to uniqid.process().', error); }
+    if (pid === '') { console.error('Info: No process.pid - uniqid.process() falls back to uniqid.time().'); }
   }
 }

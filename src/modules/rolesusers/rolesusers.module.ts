@@ -1,10 +1,10 @@
-import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { RolesUsers } from "./rolesusers.entity";
-import { RolesUsersService } from "./rolesusers.service";
-import { RequestParamValidationMiddleware } from "../common/middlewares/RequestParamValidationMiddleware";
-import { AddRolesUsersDto, UpdateRolesUsersDto } from "./interfaces/rolesusers.dto";
-import { RolesUsersController } from "./rolesusers.controller";
+import { Module, NestModule, MiddlewaresConsumer, RequestMethod } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RolesUsers } from './rolesusers.entity';
+import { RolesUsersService } from './rolesusers.service';
+import { RequestParamValidationMiddleware } from '../common/middlewares/RequestParamValidationMiddleware';
+import { AddRolesUsersDto, UpdateRolesUsersDto } from './interfaces/rolesusers.dto';
+import { RolesUsersController } from './rolesusers.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RolesUsers])],
@@ -13,7 +13,7 @@ import { RolesUsersController } from "./rolesusers.controller";
   exports: [RolesUsersService]
 })
 export class RolesUsersModule implements NestModule {
-  configure(consumer: MiddlewaresConsumer): void | MiddlewaresConsumer {
+  public configure(consumer: MiddlewaresConsumer): void | MiddlewaresConsumer {
     consumer.apply(RequestParamValidationMiddleware).with(AddRolesUsersDto).forRoutes(
       { path: '/rolesusers/add_roles_users', method: RequestMethod.POST }
     );

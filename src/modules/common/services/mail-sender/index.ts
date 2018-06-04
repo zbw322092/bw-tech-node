@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer';
 import nconf from '../../../../config/config';
 import { IsEmail, Length } from 'class-validator';
 
-const transporter = nodemailer.createTransport(nconf.get("mail:options"));
+const transporter = nodemailer.createTransport(nconf.get('mail:options'));
 
 transporter.verify((error, success) => {
   if (error) {
@@ -13,20 +13,20 @@ transporter.verify((error, success) => {
 });
 
 export class MailSender {
-  constructor(to:string, subject: string, text: string, html: string) {
+  constructor(to: string, subject: string, text: string, html: string) {
     this.to = to;
     this.subject = subject;
     this.text = text;
     this.html = html;
   }
   @IsEmail()
-  to: string;
+  public to: string;
 
   @Length(5, 200)
-  subject: string;
+  public subject: string;
 
-  text: string;
-  html: string;
+  public text: string;
+  public html: string;
 
   public async sendMail() {
     const from = nconf.get('mail:options:host') || 'localhost';

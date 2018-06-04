@@ -1,7 +1,7 @@
-import { Controller, Session, Post, Body } from "@nestjs/common";
-import { AddPermissionRoleDto } from "./interfaces/permissionrole.dto";
-import { ICommonResponse } from "../common/interfaces/ICommonResponse";
-import { PermissionRoleService } from "./permission.role.service";
+import { Controller, Session, Post, Body } from '@nestjs/common';
+import { AddPermissionRoleDto } from './interfaces/permissionrole.dto';
+import { ICommonResponse } from '../common/interfaces/ICommonResponse';
+import { PermissionRoleService } from './permission.role.service';
 
 @Controller('permissionrole')
 export class PermissionRoleController {
